@@ -2,6 +2,8 @@ package com.example.breach;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -42,7 +44,10 @@ public class OngoingActivity extends AppCompatActivity {
 
 
     private Intent ongoingScreenIntent;
-    private String intentLocationName = "finalLocation";
+    private String exportedLocationName = "finalLocation";
+    private String exportedPlayerRole = "playerRole";
+    private String exportedReason = "intentReason";
+    private String exportedReasonPlayer = "player";
     // endregion
 
     @Override
@@ -87,18 +92,36 @@ public class OngoingActivity extends AppCompatActivity {
 
             // region roles
         int randLocationIndex = new Random().nextInt(arrLocations.length);
+
         int intentIntPlayers = 5;
+
         String[] arrPlayers = new String[intentIntPlayers];
 
         for (int i = 0; i < intentIntPlayers; i++) {
             arrPlayers[i] = "Player " + (i + 1);
         }
 
-        // Removes the location name from the list of roles. Saves this loctaion in the intent to be passed to EndActivity.
-        ongoingScreenIntent.putExtra(intentLocationName, arrLocations[randLocationIndex].remove(0));
+        // Removes the location name from the list of roles. Saves this location in the intent to be passed to EndActivity.
+        ongoingScreenIntent.putExtra(exportedLocationName, arrLocations[randLocationIndex].remove(0));
         listRoles.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_role, arrPlayers));
             // endregion roles
         // endregion
+
+
+        // region Button.onClickListeners()
+        listRoles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // I'll just use the EndActivity since all we need the player to see is a location and role.
+                ongoingScreenIntent.putExtra(exportedPlayerRole, arrLocations[randLocationIndex].remove(new Random().nextInt(arrLocations[randLocationIndex].size())));
+                ongoingScreenIntent.putExtra(exportedReason, exportedReasonPlayer);
+
+                // This toast shows that hitting the back button doesn't re-roll the randLocationIndex, so therefore the deletion of arrLocations is saved, therefore no two roles can be the same.
+                Toast.makeText(OngoingActivity.this, ongoingScreenIntent.getStringExtra(exportedPlayerRole) + "    " + randLocationIndex, Toast.LENGTH_SHORT).show();
+//                startActivity(ongoingScreenIntent);
+            }
+        });
+        // endregion Button
     }
 
 
