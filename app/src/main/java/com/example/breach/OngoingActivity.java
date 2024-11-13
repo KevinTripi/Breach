@@ -87,18 +87,16 @@ public class OngoingActivity extends AppCompatActivity {
 
             // region roles
         int randLocationIndex = new Random().nextInt(arrLocations.length);
+        int intentIntPlayers = 5;
+        String[] arrPlayers = new String[intentIntPlayers];
 
-//        for (int i = 0; i < 5; i++) {
-//
-//        }
+        for (int i = 0; i < intentIntPlayers; i++) {
+            arrPlayers[i] = "Player " + (i + 1);
+        }
 
         // Removes the location name from the list of roles. Saves this loctaion in the intent to be passed to EndActivity.
         ongoingScreenIntent.putExtra(intentLocationName, arrLocations[randLocationIndex].remove(0));
-        listRoles.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_role, arrLocations[randLocationIndex]));
-
-//        for (int i = 0; i < intentIntPlayers; i++) {
-//
-//        }
+        listRoles.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_role, arrPlayers));
             // endregion roles
         // endregion
     }
