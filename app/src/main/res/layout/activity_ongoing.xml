@@ -7,15 +7,11 @@
     android:paddingHorizontal="20dp">
 
     <!-- Role section  -->
-    <ScrollView
+    <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="2">
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </ScrollView>
+        android:layout_weight="2"
+        android:id="@+id/listview_role"/>
 
     <!-- Location section -->
     <LinearLayout
@@ -40,13 +36,15 @@
             <ListView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:id="@+id/listview_location_left"/>
 
             <!-- Right column -->
             <ListView
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"/>
+                android:layout_weight="1"
+                android:id="@+id/listview_location_right"/>
         </LinearLayout>
     </LinearLayout>
 
@@ -61,7 +59,8 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:text="Start Timer"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:id="@+id/button_timer"/>
 
         <TextView
             android:layout_width="0dp"
@@ -69,12 +68,14 @@
             android:layout_weight="1"
             android:text="0:00"
             android:textAlignment="center"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:id="@+id/textview_timer"/>
     </LinearLayout>
 
     <!-- End game button section -->
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="End Game"/>
+        android:text="End Game"
+        android:id="@+id/button_end_game"/>
 </LinearLayout>
