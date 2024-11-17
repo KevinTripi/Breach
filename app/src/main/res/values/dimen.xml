@@ -3,4 +3,7 @@
     <dimen name="small_text">20sp</dimen>
     <dimen name="medium_text">25sp</dimen>
     <dimen name="large_text">35sp</dimen>
+
+    <dimen name="activity_padding_vertical">40dp</dimen>
+    <dimen name="activity_padding_horizontal">20dp</dimen>
 </resources>
