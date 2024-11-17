@@ -2,6 +2,7 @@ package com.example.breach;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -50,6 +51,10 @@ public class OngoingActivity extends AppCompatActivity {
     private String exportedReasonPlayer = "player";
     // endregion
 
+    private boolean timerRunning = false;
+    private long intentIntDuration = 1010101022;
+    private CountDownTimer timer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,8 +71,9 @@ public class OngoingActivity extends AppCompatActivity {
 
         ongoingScreenIntent = new Intent(this, EndActivity.class);
 
+
         // region main
-        txtTimer.setText(formatMsToTime(1010101010));
+        txtTimer.setText(formatMsToTime(intentIntDuration));
 //        txtTimer.setText(formatMsToTime(intentIntDuration));
 
             // region location setting
@@ -108,6 +114,11 @@ public class OngoingActivity extends AppCompatActivity {
         // endregion
 
 
+
+
+
+
+
         // region Button.onClickListeners()
         listRoles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -121,12 +132,43 @@ public class OngoingActivity extends AppCompatActivity {
 //                startActivity(ongoingScreenIntent);
             }
         });
+
+        btnTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!timerRunning) {
+                    timer = new CountDownTimer(intentIntDuration, 100) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+                            txtTimer.setText(formatMsToTime(millisUntilFinished));
+                            // idea from https://stackoverflow.com/a/6469166
+                            intentIntDuration = millisUntilFinished;
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+                    }.start();
+                    timerRunning = true;
+                    btnTimer.setText("Start Timer");
+                } else {
+                    try {
+                        timer.cancel();
+                        timerRunning = false;
+                        btnTimer.setText("Pause Timer");
+                    } catch (Exception e) {
+
+                    }
+                }
+            }
+        });
         // endregion Button
     }
 
 
 
-    private String formatMsToTime(int intMs) {
+    private String formatMsToTime(long intMs) {
         return String.format("%01d:%02d:%02d",
                 (int) (intMs / 3600000),
                 (int) (intMs % 3600000) / 60000,
