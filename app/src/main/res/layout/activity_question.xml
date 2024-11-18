@@ -56,7 +56,8 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="5"
-        android:id="@+id/linearlayout_input">
+        android:id="@+id/linearlayout_input"
+        tools:ignore="Orientation">
 
         <!-- Works by applying to all unusedView.setVisibility(GONE). -->
 

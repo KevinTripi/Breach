@@ -84,6 +84,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     // Turns all user input types' visibility to gone.
     private void clearInputLayout() {
+        // from https://stackoverflow.com/a/8395263
         for (int i = 0; i < llInput.getChildCount(); i++) {
             llInput.getChildAt(i).setVisibility(View.GONE);
         }
