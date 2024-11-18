@@ -55,7 +55,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="5">
+        android:layout_weight="5"
+        android:id="@+id/linearlayout_input">
 
         <!-- Works by applying to all unusedView.setVisibility(GONE). -->
 
@@ -64,23 +65,27 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:visibility="gone">
+            android:visibility="gone"
+            android:id="@+id/linearlayout_answer_seekbar">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="label 1"
-                android:textSize="@dimen/small_text"/>
+                android:textSize="@dimen/small_text"
+                android:id="@+id/textview_seek_start"/>
             <SeekBar
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center"
+                android:id="@+id/seekbar_answer"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/small_text"
-                android:text="label 2"/>
+                android:text="label 2"
+                android:id="@+id/textview_seek_end"/>
         </LinearLayout>
 
         <!-- layout CheckBox -->
@@ -90,27 +95,32 @@
             android:layout_gravity="center"
             android:orientation="vertical"
             android:visibility="gone"
-            android:paddingStart="10dp">
+            android:paddingStart="10dp"
+            android:id="@+id/linearlayout_answer_checkbox">
 
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Checkbox 1"
+                android:id="@+id/checkbox_1"
                 android:textSize="@dimen/small_text"/>
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Checkbox 2"
+                android:id="@+id/checkbox_2"
                 android:textSize="@dimen/small_text"/>
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Checkbox 3"
+                android:id="@+id/checkbox_3"
                 android:textSize="@dimen/small_text"/>
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Checkbox 4"
+                android:id="@+id/checkbox_4"
                 android:textSize="@dimen/small_text"/>
         </LinearLayout>
 
@@ -120,7 +130,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:paddingStart="10dp">
+            android:paddingStart="10dp"
+            android:id="@+id/radiogroup_answer">
 
             <RadioButton
                 android:layout_width="wrap_content"
