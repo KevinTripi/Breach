@@ -3,6 +3,7 @@ package com.example.breach;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -40,20 +41,27 @@ public class OngoingActivity extends AppCompatActivity {
 
     // Ex: (in mainActivity) myIntent.putExtra("replace me!", 80000);
 //    private int intentIntDuration = startScreenIntent.getIntExtra("replace me!", 0);
-
-//    private int intentIntPlayers = startScreenIntent.getIntExtra("replace me!", 2);
-
+//    private int intentIntPlayerAmount = startScreenIntent.getIntExtra("replace me!", 2);
+//    private int intentIntQuestionAmount = startScreenIntent.getIntExtra("replace me!", 0);
+    private int intentIntQuestionAmount = 2;
 
     private Intent ongoingScreenIntent;
-    private String exportedLocationName = "finalLocation";
-    private String exportedPlayerRole = "playerRole";
-    private String exportedReason = "intentReason";
-    private String exportedReasonPlayer = "player";
+
+    private String exportedLocationName;
+    private String exportedPlayerRole;
+    private String exportedReason;
+    private String exportedReasonPlayer;
+    private String exportedPlayerAmount;
     // endregion
 
     private boolean timerRunning = false;
-    private long intentIntDuration = 1010101022;
+    private long intentIntDuration = 6000;
     private CountDownTimer timer;
+
+    // The timer checks pauseGameIndex / totalGameTime every tick. On trigger, decrements pauseGameIndex.
+    // Ex: 4 questions for a 5 min game, timer is checking (4 / 5 min), then (3 / 5 min), ...
+    private long totalGameTime = intentIntDuration;
+    private int pauseGameIndex = intentIntQuestionAmount - 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +78,12 @@ public class OngoingActivity extends AppCompatActivity {
         listLocationsRight = findViewById(R.id.listview_location_right);
 
         ongoingScreenIntent = new Intent(this, EndActivity.class);
+
+        exportedLocationName = getString(R.string.location_name);
+        exportedPlayerRole = getString(R.string.player_role);
+        exportedReason = getString(R.string.reason);
+        exportedReasonPlayer = getString(R.string.reason_player);
+        exportedPlayerAmount = getString(R.string.number_of_players);
 
 
         // region main
@@ -99,11 +113,11 @@ public class OngoingActivity extends AppCompatActivity {
             // region roles
         int randLocationIndex = new Random().nextInt(arrLocations.length);
 
-        int intentIntPlayers = 5;
+        int intentIntPlayerAmount = 5;
 
-        String[] arrPlayers = new String[intentIntPlayers];
+        String[] arrPlayers = new String[intentIntPlayerAmount];
 
-        for (int i = 0; i < intentIntPlayers; i++) {
+        for (int i = 0; i < intentIntPlayerAmount; i++) {
             arrPlayers[i] = "Player " + (i + 1);
         }
 
@@ -111,7 +125,8 @@ public class OngoingActivity extends AppCompatActivity {
         ongoingScreenIntent.putExtra(exportedLocationName, arrLocations[randLocationIndex].remove(0));
         listRoles.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_role, arrPlayers));
             // endregion roles
-        // endregion
+
+        // endregion main
 
 
 
@@ -137,12 +152,26 @@ public class OngoingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!timerRunning) {
-                    timer = new CountDownTimer(intentIntDuration, 100) {
+                    timerRunning = true;
+                    btnTimer.setText("Pause Timer");
+
+                    timer = new CountDownTimer(intentIntDuration, 500) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             txtTimer.setText(formatMsToTime(millisUntilFinished));
+//                            txtTimer.setText(millisUntilFinished + "");
+
                             // idea from https://stackoverflow.com/a/6469166
                             intentIntDuration = millisUntilFinished;
+
+                            if (millisUntilFinished <= (((double) pauseGameIndex / intentIntQuestionAmount) * totalGameTime) + 500) {
+                                pauseGameIndex--;
+                                Log.i("TimerPlease", String.format("index: %d question am: %d totalTime %.0f output: %.0f", pauseGameIndex, intentIntQuestionAmount, (float) totalGameTime, (float) (((double) pauseGameIndex / intentIntQuestionAmount) * totalGameTime)));
+                                btnTimer.performClick();
+                                ongoingScreenIntent = new Intent(OngoingActivity.this.getApplicationContext(), QuestionActivity.class);
+                                ongoingScreenIntent.putExtra(exportedPlayerAmount, intentIntPlayerAmount);
+                                startActivity(ongoingScreenIntent);
+                            }
                         }
 
                         @Override
@@ -150,13 +179,11 @@ public class OngoingActivity extends AppCompatActivity {
 
                         }
                     }.start();
-                    timerRunning = true;
-                    btnTimer.setText("Start Timer");
                 } else {
                     try {
                         timer.cancel();
                         timerRunning = false;
-                        btnTimer.setText("Pause Timer");
+                        btnTimer.setText("Start Timer");
                     } catch (Exception e) {
 
                     }

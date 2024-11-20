@@ -9,6 +9,7 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,10 @@ public class QuestionActivity extends AppCompatActivity {
     private RadioGroup rgAnswer;
     private LinearLayout llInput, llSeekbar, llCheckbox;
 
+    private int importedPlayerAmount;
+//    private int importedPlayerAmount = 4;
+    // Represents the answers each player inputs. The length is the amount of players in the game.
+    private String[] answers = new String[importedPlayerAmount];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,12 @@ public class QuestionActivity extends AppCompatActivity {
         llSeekbar = findViewById(R.id.linearlayout_answer_seekbar);
         rgAnswer = findViewById(R.id.radiogroup_answer);
 
+
+
+        importedPlayerAmount = getIntent().getIntExtra(getString(R.string.number_of_players), 1);
+        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
+
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +95,13 @@ public class QuestionActivity extends AppCompatActivity {
 
     // Turns all user input types' visibility to gone.
     private void clearInputLayout() {
+        cbAnswer1.setChecked(false);
+        cbAnswer2.setChecked(false);
+        cbAnswer3.setChecked(false);
+        cbAnswer4.setChecked(false);
+        rgAnswer.clearCheck();
+        seekAnswer.setProgress(0);
+
         // from https://stackoverflow.com/a/8395263
         for (int i = 0; i < llInput.getChildCount(); i++) {
             llInput.getChildAt(i).setVisibility(View.GONE);
