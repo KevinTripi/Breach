@@ -103,25 +103,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Checkbox 1"
-                android:id="@+id/checkbox_1"
+                android:id="@+id/checkbox_0"
                 android:textSize="@dimen/small_text"/>
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Checkbox 2"
-                android:id="@+id/checkbox_2"
+                android:id="@+id/checkbox_1"
                 android:textSize="@dimen/small_text"/>
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Checkbox 3"
-                android:id="@+id/checkbox_3"
+                android:id="@+id/checkbox_2"
                 android:textSize="@dimen/small_text"/>
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Checkbox 4"
-                android:id="@+id/checkbox_4"
+                android:id="@+id/checkbox_3"
                 android:textSize="@dimen/small_text"/>
         </LinearLayout>
 
@@ -138,22 +138,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RadioButton 1"
-                android:textSize="@dimen/small_text"/>
+                android:textSize="@dimen/small_text"
+                android:id="@+id/radio_0"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RadioButton 2"
-                android:textSize="@dimen/small_text"/>
+                android:textSize="@dimen/small_text"
+                android:id="@+id/radio_1"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RadioButton 3"
-                android:textSize="@dimen/small_text"/>
+                android:textSize="@dimen/small_text"
+                android:id="@+id/radio_2"/>
             <RadioButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="RadioButton 4"
-                android:textSize="@dimen/small_text"/>
+                android:textSize="@dimen/small_text"
+                android:id="@+id/radio_3"/>
         </RadioGroup>
 
     </LinearLayout>
