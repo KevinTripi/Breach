@@ -105,7 +105,7 @@ public class QuestionActivity extends AppCompatActivity {
                 llSeekbar.setVisibility(View.VISIBLE);
                 txtSeekStart.setText(arrOptions[0]);
                 txtSeekEnd.setText(arrOptions[1]);
-//                seekAnswer.setMax(Integer.parseInt(arrOptions[0]));
+                seekAnswer.setMax(Integer.parseInt(arrOptions[2]));
                 break;
             case "RB":
                 rgAnswer.setVisibility(View.VISIBLE);
@@ -156,7 +156,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         for (int i = 0; i < arrOptions.length; i++) {
             arrOptions[i] = result.getString(i + 2);
-//            Log.i("db", arrOptions[i]);
+            Log.i("db", arrOptions[i] != null ? arrOptions[i] : "null");
         }
 
         setActivityInputType(result.getString(0));
