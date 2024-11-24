@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,14 +28,15 @@ import java.util.Random;
 public class QuestionActivity extends AppCompatActivity {
 
     private ProgressBar progBarTime;
-    private TextView txtQuestion, txtSeekStart, txtSeekEnd, txtPlayer;
+    private TextView txtQuestion, txtSeekStart, txtSeekEnd, txtPlayer, txtSeekProgress;
     private Button btnSubmit;
     private CheckBox cbAnswer0, cbAnswer1, cbAnswer2, cbAnswer3;;
     private RadioButton rbAnswer0, rbAnswer1, rbAnswer2, rbAnswer3;
     private SeekBar seekAnswer;
 
     private RadioGroup rgAnswer;
-    private LinearLayout llInput, llSeekbar, llCheckbox;
+    private LinearLayout llInput, llCheckbox;
+    private RelativeLayout llSeekbar;
 
     private int importedPlayerAmount = 4;
     // Represents the answers each player inputs. The length is the amount of players in the game.
@@ -70,6 +72,7 @@ public class QuestionActivity extends AppCompatActivity {
         seekAnswer = findViewById(R.id.seekbar_answer);
         txtSeekEnd = findViewById(R.id.textview_seek_end);
         txtSeekStart = findViewById(R.id.textview_seek_start);
+        txtSeekProgress = findViewById(R.id.textview_seek_progress);
 
         llInput = findViewById(R.id.linearlayout_input);
         llCheckbox = findViewById(R.id.linearlayout_answer_checkbox);
@@ -140,6 +143,23 @@ public class QuestionActivity extends AppCompatActivity {
             }
         });
         // endregion onClickListeners()
+
+        seekAnswer.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                txtSeekProgress.setText(String.valueOf(progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
     }
 
     private void startTimer(long ms) {

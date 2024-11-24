@@ -71,32 +71,48 @@
         <!-- Works by applying to all unusedView.setVisibility(GONE). -->
 
         <!-- layout SeekBar -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:id="@+id/linearlayout_answer_seekbar">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/small_text"
+                android:layout_above="@id/seekbar_answer"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/textview_seek_progress"
+                android:text="0"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="label 1"
                 android:textSize="@dimen/small_text"
-                android:id="@+id/textview_seek_start"/>
+                android:id="@+id/textview_seek_start"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
+
             <SeekBar
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_gravity="center"
-                android:id="@+id/seekbar_answer"/>
+                android:id="@+id/seekbar_answer"
+                android:layout_toRightOf="@id/textview_seek_start"
+                android:layout_toLeftOf="@id/textview_seek_end"
+                android:layout_centerInParent="true"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/small_text"
                 android:text="label 2"
-                android:id="@+id/textview_seek_end"/>
-        </LinearLayout>
+                android:id="@+id/textview_seek_end"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
 
         <!-- layout CheckBox -->
         <LinearLayout
@@ -141,6 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingStart="10dp"
+            android:visibility="gone"
             android:id="@+id/radiogroup_answer">
 
             <RadioButton
