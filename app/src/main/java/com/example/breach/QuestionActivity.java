@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -82,14 +83,16 @@ public class QuestionActivity extends AppCompatActivity {
         rgAnswer = findViewById(R.id.radiogroup_answer);
 
 
-        createDB();
-//        getResult("SELECT * FROM Roles");
 
+        // main
         importedPlayerAmount = getIntent().getIntExtra(getString(R.string.number_of_players), 1);
-//        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
-
+        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
+        createDB();
         displayRandomQuestion();
+        startTimer(10000);
 
+
+        // region onClickListeners()
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +139,27 @@ public class QuestionActivity extends AppCompatActivity {
                 Log.i("Answers", "arrPlayerAnswers: " + Arrays.toString(arrPlayerAnswers));
             }
         });
+        // endregion onClickListeners()
+    }
+
+    private void startTimer(long ms) {
+        progBarTime.setMax((int) ms);
+        new CountDownTimer(ms, 400) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                progBarTime.setProgress((int) millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                progBarTime.setProgress(0);
+                // Maybe have a random input be submitted for the player?
+//                switch (new Random().nextInt(4)) {
+//                    case 0:
+//
+//                }
+            }
+        }.start();
     }
 
     // Depending on the argument, the LinearLayout with the user inputs will display one type of input.
