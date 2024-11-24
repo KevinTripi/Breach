@@ -94,16 +94,7 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (playerIndex >= arrPlayerAnswers.length) {
-                    Intent resultScreenIntent = new Intent(QuestionActivity.this.getApplicationContext(), ResultActivity.class);
-                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_options), new ArrayList<String>(Arrays.asList(arrOptions)));
-                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_answers), new ArrayList<String>(Arrays.asList(arrPlayerAnswers)));
-                    resultScreenIntent.putExtra(getString(R.string.question_type), questionType);
-                    resultScreenIntent.putExtra(getString(R.string.question_text), questionText);
-                    Log.i("beforeResult", questionType + "   " + resultScreenIntent.getStringExtra(getString(R.string.question_type)));
-                    startActivity(resultScreenIntent);
                     return;
-                } else {
-                    txtPlayer.setText("Player " + (playerIndex + 2));
                 }
 
                 switch (questionType) {
@@ -140,6 +131,19 @@ public class QuestionActivity extends AppCompatActivity {
                 setActivityInputType();
                 playerIndex++;
                 Log.i("Answers", "arrPlayerAnswers: " + Arrays.toString(arrPlayerAnswers));
+
+                if (playerIndex >= arrPlayerAnswers.length) {
+                    Intent resultScreenIntent = new Intent(QuestionActivity.this.getApplicationContext(), ResultActivity.class);
+                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_options), new ArrayList<String>(Arrays.asList(arrOptions)));
+                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_answers), new ArrayList<String>(Arrays.asList(arrPlayerAnswers)));
+                    resultScreenIntent.putExtra(getString(R.string.question_type), questionType);
+                    resultScreenIntent.putExtra(getString(R.string.question_text), questionText);
+                    Log.i("beforeResult", questionType + "   " + resultScreenIntent.getStringExtra(getString(R.string.question_type)));
+                    startActivity(resultScreenIntent);
+                    return;
+                } else {
+                    txtPlayer.setText("Player " + (playerIndex + 1));
+                }
             }
         });
         // endregion onClickListeners()
