@@ -3,6 +3,7 @@ package com.example.breach;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
@@ -104,6 +105,13 @@ public class ResultActivity extends AppCompatActivity {
                     break;
             }
         }
+
+        btnExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ResultActivity.this.getApplicationContext(), OngoingActivity.class));
+            }
+        });
     }
 
     private String formatPlayerText(int index) {
