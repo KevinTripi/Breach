@@ -48,21 +48,22 @@ public class ResultActivity extends AppCompatActivity {
                     int total = Integer.parseInt(arrOptions.get(2));
                     int increment = total / txtOptions.length;
 
-                    for (int i = 0; i < txtOptionPlayers.length; i++) {
-                        txtOptionPlayers[i].setText("");
-                    }
+//                    for (int i = 0; i < txtOptionPlayers.length; i++) {
+//                        txtOptionPlayers[i].setText("");
+//                    }
 
                     for (int i = 0; i < txtOptions.length; i++) {
                         int floor = increment * i;
                         int ceiling = increment * (i + 1);
 
                         txtOptions[i].setText(String.format("%d - %d:", floor, ceiling));
+                        txtOptionPlayers[i].setText("");
 
                         for (int j = 0; j < arrAnswers.size(); j++) {
                             int result = Integer.parseInt(arrAnswers.get(j));
                             if (result < ceiling && result >= floor) {
                                 txtOptionPlayers[i].setText(String.format("%s%s: %s\n", txtOptionPlayers[i].getText(), formatPlayerText(j), arrAnswers.get(j)));
-                            } else if (result == ceiling) {
+                            } else if (result >= total) {
                                 txtOptionPlayers[txtOptionPlayers.length - 1].setText(String.format("%s%s: %s\n", txtOptionPlayers[txtOptionPlayers.length - 1].getText(), formatPlayerText(j), arrAnswers.get(j)));
                             }
                         }
