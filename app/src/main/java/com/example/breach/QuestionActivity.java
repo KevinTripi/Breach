@@ -24,6 +24,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 import javax.security.auth.login.LoginException;
@@ -31,7 +32,7 @@ import javax.security.auth.login.LoginException;
 public class QuestionActivity extends AppCompatActivity {
 
     private ProgressBar progBarTime;
-    private TextView txtQuestion, txtSeekStart, txtSeekEnd;
+    private TextView txtQuestion, txtSeekStart, txtSeekEnd, txtPlayer;
     private Button btnSubmit;
     private CheckBox cbAnswer0, cbAnswer1, cbAnswer2, cbAnswer3;;
     private RadioButton rbAnswer0, rbAnswer1, rbAnswer2, rbAnswer3;
@@ -40,12 +41,13 @@ public class QuestionActivity extends AppCompatActivity {
     private RadioGroup rgAnswer;
     private LinearLayout llInput, llSeekbar, llCheckbox;
 
-    private int importedPlayerAmount;
-//    private int importedPlayerAmount = 4;
+    private int importedPlayerAmount = 4;
     // Represents the answers each player inputs. The length is the amount of players in the game.
     private String[] arrPlayerAnswers = new String[importedPlayerAmount];
     private String questionText;
     private String[] arrOptions = new String[4];
+    private int playerIndex = 0;
+    private String questionType;
 
     private DBHelper myDbHelper;
     private SQLiteDatabase db;
@@ -58,6 +60,7 @@ public class QuestionActivity extends AppCompatActivity {
         progBarTime = findViewById(R.id.progressbar_time_left);
         txtQuestion = findViewById(R.id.textview_question);
         btnSubmit = findViewById(R.id.button_submit);
+        txtPlayer = findViewById(R.id.textview_player);
 
         cbAnswer0 = findViewById(R.id.checkbox_0);
         cbAnswer1 = findViewById(R.id.checkbox_1);
@@ -84,23 +87,64 @@ public class QuestionActivity extends AppCompatActivity {
 
         importedPlayerAmount = getIntent().getIntExtra(getString(R.string.number_of_players), 1);
 //        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
-//        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
 
         displayRandomQuestion();
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                setActivityInputType("CheckBox");
+                if (playerIndex >= arrPlayerAnswers.length) {
+                    // intent back to the ongoing screen
+                    return;
+                } else {
+                    txtPlayer.setText("Player " + (playerIndex + 1));
+                }
+
+                switch (questionType) {
+                    case "SB":
+                        arrPlayerAnswers[playerIndex] = String.valueOf(seekAnswer.getProgress());
+                        break;
+
+                    case "RB":
+                        RadioButton rbChecked;
+                        if (rbAnswer0.isChecked()) {
+                            rbChecked = rbAnswer0;
+                        } else if (rbAnswer1.isChecked()) {
+                            rbChecked = rbAnswer1;
+                        } else if (rbAnswer2.isChecked()) {
+                            rbChecked = rbAnswer2;
+                        } else if (rbAnswer3.isChecked()) {
+                            rbChecked = rbAnswer3;
+                        } else {
+                            Toast.makeText(QuestionActivity.this, "Please select an option!", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        arrPlayerAnswers[playerIndex] = rbChecked.getText().toString();
+                        break;
+
+                    default:
+                        String ret = "";
+                        ret += cbAnswer0.isChecked() ? "T" : "F";
+                        ret += cbAnswer1.isChecked() ? "T" : "F";
+                        ret += cbAnswer2.isChecked() ? "T" : "F";
+                        ret += cbAnswer3.isChecked() ? "T" : "F";
+                        arrPlayerAnswers[playerIndex] = ret;
+                        break;
+                }
+                setActivityInputType();
+                playerIndex++;
+                Log.i("Answers", "arrPlayerAnswers: " + Arrays.toString(arrPlayerAnswers));
             }
         });
     }
 
     // Depending on the argument, the LinearLayout with the user inputs will display one type of input.
-    public void setActivityInputType(String inputType) {
+    public void setActivityInputType() {
         clearInputLayout();
 
-        switch (inputType) {
+        if (questionType.isEmpty()) return;
+
+        switch (questionType) {
             case "SB":
                 llSeekbar.setVisibility(View.VISIBLE);
                 txtSeekStart.setText(arrOptions[0]);
@@ -156,10 +200,11 @@ public class QuestionActivity extends AppCompatActivity {
 
         for (int i = 0; i < arrOptions.length; i++) {
             arrOptions[i] = result.getString(i + 2);
-            Log.i("db", arrOptions[i] != null ? arrOptions[i] : "null");
+//            Log.i("db", arrOptions[i] != null ? arrOptions[i] : "null");
         }
 
-        setActivityInputType(result.getString(0));
+        questionType = result.getString(0);
+        setActivityInputType();
     }
 
 

@@ -30,6 +30,15 @@
             android:id="@+id/progressbar_time_left"/>
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/large_text"
+        android:text="Player 1"
+        android:paddingVertical="10dp"
+        android:id="@+id/textview_player"
+        />
+
     <!-- layout question -->
     <LinearLayout
         android:layout_width="match_parent"
