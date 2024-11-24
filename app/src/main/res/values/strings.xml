@@ -5,4 +5,8 @@
     <string name="reason">intentReason</string>
     <string name="reason_player">player</string>
     <string name="number_of_players">playerAmount</string>
+    <string name="question_array_options">arrOptions</string>
+    <string name="question_array_answers">arrAnswers</string>
+    <string name="question_type">questionType</string>
+    <string name="question_text">questionText</string>
 </resources>

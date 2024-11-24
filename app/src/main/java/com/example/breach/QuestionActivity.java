@@ -1,9 +1,9 @@
 package com.example.breach;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -18,17 +18,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
-
-import javax.security.auth.login.LoginException;
 
 public class QuestionActivity extends AppCompatActivity {
 
@@ -86,7 +80,7 @@ public class QuestionActivity extends AppCompatActivity {
 
         // main
         importedPlayerAmount = getIntent().getIntExtra(getString(R.string.number_of_players), 1);
-        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
         createDB();
         displayRandomQuestion();
         startTimer(10000);
@@ -97,10 +91,16 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (playerIndex >= arrPlayerAnswers.length) {
-                    // intent back to the ongoing screen
+                    Intent resultScreenIntent = new Intent(QuestionActivity.this.getApplicationContext(), ResultActivity.class);
+                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_options), new ArrayList<String>(Arrays.asList(arrOptions)));
+                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_answers), new ArrayList<String>(Arrays.asList(arrPlayerAnswers)));
+                    resultScreenIntent.putExtra(getString(R.string.question_type), questionType);
+                    resultScreenIntent.putExtra(getString(R.string.question_text), questionText);
+                    Log.i("beforeResult", questionType + "   " + resultScreenIntent.getStringExtra(getString(R.string.question_type)));
+                    startActivity(resultScreenIntent);
                     return;
                 } else {
-                    txtPlayer.setText("Player " + (playerIndex + 1));
+                    txtPlayer.setText("Player " + (playerIndex + 2));
                 }
 
                 switch (questionType) {
@@ -214,7 +214,7 @@ public class QuestionActivity extends AppCompatActivity {
         result.moveToFirst();
 
         int randInt = new Random().nextInt(result.getCount());
-        Toast.makeText(this, "rand row: " + randInt, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "rand row: " + randInt, Toast.LENGTH_SHORT).show();
 
         result.moveToPosition(randInt);
 
