@@ -1,6 +1,9 @@
 package com.example.breach;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -24,15 +27,7 @@ public class OngoingActivity extends AppCompatActivity {
     private ListView listRoles, listLocationsLeft, listLocationsRight;
 
     // region String arrays
-    private ArrayList<String>[] arrLocations = new ArrayList[] {
-        new ArrayList<>(Arrays.asList("loc1", "role1", "role2", "role3", "role4")),
-        new ArrayList<>(Arrays.asList("loc2", "role5", "role6", "role7", "role8")),
-        new ArrayList<>(Arrays.asList("loc3", "role34", "role2", "role3", "role4")),
-        new ArrayList<>(Arrays.asList("loc4", "role74", "role2", "role3", "role4")),
-        new ArrayList<>(Arrays.asList("loc5", "role23", "role2", "role3", "role4")),
-        new ArrayList<>(Arrays.asList("loc6", "role89", "role2", "role3", "role4")),
-        new ArrayList<>(Arrays.asList("loc7", "role4", "role2", "role3", "role4"))
-    };
+    private ArrayList<String> arrLocation;
     // endregion
 
 
@@ -63,6 +58,9 @@ public class OngoingActivity extends AppCompatActivity {
     private long totalGameTime = intentIntDuration;
     private int pauseGameIndex = intentIntQuestionAmount - 1;
 
+    private DBHelper myDbHelper;
+    private SQLiteDatabase db;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,15 +89,19 @@ public class OngoingActivity extends AppCompatActivity {
 //        txtTimer.setText(formatMsToTime(intentIntDuration));
 
             // region location setting
+        createDB();
+        Cursor curLocations = db.rawQuery("SELECT * FROM Locations", null);
+        curLocations.moveToFirst();
+
         ArrayList<String> arrLeft = new ArrayList<>(), arrRight = new ArrayList<>();
 
-        for (int i = 0; i < arrLocations.length; i++) {
-            if (i % 2 == 0) {
-                arrLeft.add(arrLocations[i].get(0));
+        do {
+            if (curLocations.getPosition() % 2 == 0) {
+                arrLeft.add(curLocations.getString(0));
             } else {
-                arrRight.add(arrLocations[i].get(0));
+                arrRight.add(curLocations.getString(0));
             }
-        }
+        } while (curLocations.moveToNext());
 
 //        Toast.makeText(this, "Left:" + arrLeft.toString(), Toast.LENGTH_SHORT).show();
 
@@ -111,10 +113,8 @@ public class OngoingActivity extends AppCompatActivity {
 
 
             // region roles
-        int randLocationIndex = new Random().nextInt(arrLocations.length);
-
         int intentIntPlayerAmount = 5;
-
+        arrLocation = getRandomLocationAndRoles();
         String[] arrPlayers = new String[intentIntPlayerAmount];
 
         for (int i = 0; i < intentIntPlayerAmount; i++) {
@@ -122,10 +122,9 @@ public class OngoingActivity extends AppCompatActivity {
         }
 
         // Removes the location name from the list of roles. Saves this location in the intent to be passed to EndActivity.
-        ongoingScreenIntent.putExtra(exportedLocationName, arrLocations[randLocationIndex].remove(0));
+        ongoingScreenIntent.putExtra(exportedLocationName, arrLocation.remove(0));
         listRoles.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_role, arrPlayers));
             // endregion roles
-
         // endregion main
 
 
@@ -139,11 +138,12 @@ public class OngoingActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // I'll just use the EndActivity since all we need the player to see is a location and role.
-                ongoingScreenIntent.putExtra(exportedPlayerRole, arrLocations[randLocationIndex].remove(new Random().nextInt(arrLocations[randLocationIndex].size())));
-                ongoingScreenIntent.putExtra(exportedReason, exportedReasonPlayer);
+//                ongoingScreenIntent.putExtra(exportedPlayerRole, arrLocation.remove(new Random().nextInt(arrLocation.size())));
+//                ongoingScreenIntent.putExtra(exportedReason, exportedReasonPlayer);
 
                 // This toast shows that hitting the back button doesn't re-roll the randLocationIndex, so therefore the deletion of arrLocations is saved, therefore no two roles can be the same.
-                Toast.makeText(OngoingActivity.this, ongoingScreenIntent.getStringExtra(exportedPlayerRole) + "    " + randLocationIndex, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(OngoingActivity.this, ongoingScreenIntent.getStringExtra(exportedPlayerRole), Toast.LENGTH_SHORT).show();
+                Toast.makeText(OngoingActivity.this, arrLocation.get(new Random().nextInt(arrLocation.size())) + "", Toast.LENGTH_SHORT).show();
 //                startActivity(ongoingScreenIntent);
             }
         });
@@ -193,12 +193,66 @@ public class OngoingActivity extends AppCompatActivity {
         // endregion Button
     }
 
-
-
     private String formatMsToTime(long intMs) {
         return String.format("%01d:%02d:%02d",
                 (int) (intMs / 3600000),
                 (int) (intMs % 3600000) / 60000,
                 (int) (intMs % 60000) / 1000);
+    }
+
+    // Database stuff
+    public ArrayList<String> getRandomLocationAndRoles() {
+        Cursor result = db.rawQuery("SELECT * FROM Locations", null);
+        ArrayList<String> arrReturn = new ArrayList<>();
+        int randInt = new Random().nextInt(result.getCount());
+        Log.i("Ongoing db", "randInt: " + randInt);
+//
+//        result.moveToFirst();
+//        do {
+//            Log.i("Ongoing db", String.format("Index: %d   Name: %s   RolesId: %d", result.getPosition(), result.getString(0), result.getInt(1)));
+//        } while (result.moveToNext());
+
+        result.moveToPosition(randInt);
+        arrReturn.add(result.getString(0)); // Adds the location name to the return array
+
+        Cursor result2 = db.rawQuery("SELECT * FROM Roles WHERE Id = " + result.getInt(1), null);
+        result2.moveToFirst();
+
+        for (int i = 1; i < result2.getColumnCount(); i++) { // i = 1 since result2[1] = Id
+            arrReturn.add(result2.getString(i));
+        }
+
+        Log.i("Ongoing db", Arrays.toString(arrReturn.toArray()));
+        return arrReturn;
+    }
+
+    public void createDB() {
+        myDbHelper = new DBHelper(this);
+
+        try {
+            myDbHelper.createDatabase();
+//            myDbHelper.copyDatabaseFromAssets();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            myDbHelper.openDatabase();
+        } catch (SQLiteException e) {
+            throw new RuntimeException(e);
+        }
+
+        db = myDbHelper.getWritableDatabase();
+    }
+
+    public void getResult(String query) {
+
+        Cursor result = db.rawQuery(query, null);
+        result.moveToFirst();
+
+        do {
+//            Log.i("db", result.getString(1));
+        } while (result.moveToNext());
+
     }
 }
