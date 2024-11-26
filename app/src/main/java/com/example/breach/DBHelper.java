@@ -13,7 +13,7 @@ import java.io.OutputStream;
 
 public class DBHelper extends SQLiteOpenHelper {
     private static String DB_PATH = "/data/data/com.example.breach/databases/";
-    private static String DB_NAME = "breach-app-db-dummy";
+    private static String DB_NAME = "breach-app";
     private SQLiteDatabase db;
     private Context myContext;
     
