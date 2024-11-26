@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".QuestionActivity"
+    android:paddingVertical="@dimen/activity_padding_vertical"
+    android:paddingHorizontal="@dimen/activity_padding_horizontal">
+
+    <!-- layout time left -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/medium_text"
+            android:text="Time left:"/>
+
+        <ProgressBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:id="@+id/progressbar_time_left"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/large_text"
+        android:text="Player 1"
+        android:paddingVertical="10dp"
+        android:id="@+id/textview_player"
+        />
+
+    <!-- layout question -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="3"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Question:"
+            android:textSize="@dimen/medium_text"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/textview_question"
+            android:text="Sample Question"
+            android:textSize="@dimen/small_text"/>
+    </LinearLayout>
+
+    <!-- layout input -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="5"
+        android:id="@+id/linearlayout_input"
+        tools:ignore="Orientation">
+
+        <!-- Works by applying to all unusedView.setVisibility(GONE). -->
+
+        <!-- layout SeekBar -->
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/linearlayout_answer_seekbar">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/small_text"
+                android:layout_above="@id/seekbar_answer"
+                android:layout_centerHorizontal="true"
+                android:id="@+id/textview_seek_progress"
+                android:text="0"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="label 1"
+                android:textSize="@dimen/small_text"
+                android:id="@+id/textview_seek_start"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"/>
+
+            <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="center"
+                android:id="@+id/seekbar_answer"
+                android:layout_toRightOf="@id/textview_seek_start"
+                android:layout_toLeftOf="@id/textview_seek_end"
+                android:layout_centerInParent="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/small_text"
+                android:text="label 2"
+                android:id="@+id/textview_seek_end"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"/>
+        </RelativeLayout>
+
+        <!-- layout CheckBox -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            android:paddingStart="10dp"
+            android:id="@+id/linearlayout_answer_checkbox">
+
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Checkbox 1"
+                android:id="@+id/checkbox_0"
+                android:textSize="@dimen/small_text"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Checkbox 2"
+                android:id="@+id/checkbox_1"
+                android:textSize="@dimen/small_text"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Checkbox 3"
+                android:id="@+id/checkbox_2"
+                android:textSize="@dimen/small_text"/>
+            <CheckBox
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Checkbox 4"
+                android:id="@+id/checkbox_3"
+                android:textSize="@dimen/small_text"/>
+        </LinearLayout>
+
+
+        <!-- layout RadioButton -->
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="10dp"
+            android:visibility="gone"
+            android:id="@+id/radiogroup_answer">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RadioButton 1"
+                android:textSize="@dimen/small_text"
+                android:id="@+id/radio_0"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RadioButton 2"
+                android:textSize="@dimen/small_text"
+                android:id="@+id/radio_1"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RadioButton 3"
+                android:textSize="@dimen/small_text"
+                android:id="@+id/radio_2"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RadioButton 4"
+                android:textSize="@dimen/small_text"
+                android:id="@+id/radio_3"/>
+        </RadioGroup>
+
+    </LinearLayout>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        android:textSize="@dimen/small_text"
+        android:id="@+id/button_submit"/>
+
+</LinearLayout>

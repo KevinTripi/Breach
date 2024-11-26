@@ -1,6 +1,7 @@
 package com.example.breach;
 
 import android.os.Bundle;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+      
+      
         setContentView(R.layout.activity_main);
 
         playersContainer = findViewById(R.id.players_container);
@@ -34,7 +39,19 @@ public class MainActivity extends AppCompatActivity {
         gameTimeInput = findViewById(R.id.game_time_input);
         questionsSeekBar = findViewById(R.id.questions_seekbar);
         questionsLabel = findViewById(R.id.questions_label);
+        
 
+        EdgeToEdge.enable(this);
+        TextView locationValue = findViewById(R.id.location_value);
+        TextView breacherValue = findViewById(R.id.breacher_value);
+
+        String tempLocation = "Military base"; // Replace with whatever the location variable is called
+        String tempPlayer = "John Doe"; // Replace with player variable
+
+        locationValue.setText(tempLocation);
+        breacherValue.setText(tempPlayer);      
+      
+      
         addButton.setOnClickListener(v -> addPlayer());
         removeButton.setOnClickListener(v -> removePlayer());
         questionsSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -81,5 +98,8 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No players to remove!", Toast.LENGTH_SHORT).show();
         }
+
+
+
     }
 }
