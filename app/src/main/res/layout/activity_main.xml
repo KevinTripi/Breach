@@ -1,19 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="16dp">
 
+    <!-- Location Label -->
     <TextView
+        android:id="@+id/location_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Location:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Location Value -->
+    <TextView
+        android:id="@+id/location_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Temp Location"
+        android:textSize="16sp" />
+
+    <!-- Spacer -->
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="24dp" />
+
+    <!-- Breacher Label -->
+    <TextView
+        android:id="@+id/breacher_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Breacher:"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Breacher Value -->
+    <TextView
+        android:id="@+id/breacher_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Temp Player"
+        android:textSize="16sp" />
+
+    <!-- Spacer -->
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="16dp" />
+
+    <!-- Button -->
+    <Button
+        android:id="@+id/action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Action"
+        android:textSize="16sp" />
+
+</LinearLayout>
