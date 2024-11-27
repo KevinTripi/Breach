@@ -1,10 +1,12 @@
 <resources>
     <string name="app_name">Breach</string>
+    <string name="main_game_duration">gameDuration</string>
+    <string name="main_number_of_players">playerAmount</string>
+    <string name="main_number_of_questions">questionAmount</string>
     <string name="location_name">finalLocation</string>
     <string name="player_role">playerRole</string>
     <string name="reason">intentReason</string>
     <string name="reason_player">player</string>
-    <string name="number_of_players">playerAmount</string>
     <string name="question_array_options">arrOptions</string>
     <string name="question_array_answers">arrAnswers</string>
     <string name="question_type">questionType</string>

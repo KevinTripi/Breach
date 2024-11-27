@@ -1,8 +1,8 @@
 package com.example.breach;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -26,9 +26,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-      
-      
         setContentView(R.layout.activity_main);
 
         playersContainer = findViewById(R.id.players_container);
@@ -41,15 +38,14 @@ public class MainActivity extends AppCompatActivity {
         questionsLabel = findViewById(R.id.questions_label);
         
 
-        EdgeToEdge.enable(this);
-        TextView locationValue = findViewById(R.id.location_value);
-        TextView breacherValue = findViewById(R.id.breacher_value);
-
-        String tempLocation = "Military base"; // Replace with whatever the location variable is called
-        String tempPlayer = "John Doe"; // Replace with player variable
-
-        locationValue.setText(tempLocation);
-        breacherValue.setText(tempPlayer);      
+//        TextView locationValue = findViewById(R.id.location_value);
+//        TextView breacherValue = findViewById(R.id.breacher_value);
+//
+//        String tempLocation = "Military base"; // Replace with whatever the location variable is called
+//        String tempPlayer = "John Doe"; // Replace with player variable
+//
+//        locationValue.setText(tempLocation);
+//        breacherValue.setText(tempPlayer);
       
       
         addButton.setOnClickListener(v -> addPlayer());
@@ -75,7 +71,13 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 int breachers = Integer.parseInt(breacherCount);
                 int time = Integer.parseInt(gameTime);
-                Toast.makeText(this, "Game started with " + breachers + " breachers for " + time + " minutes.", Toast.LENGTH_LONG).show();
+//                Toast.makeText(this, "Game started with " + breachers + " breachers for " + time + " minutes.", Toast.LENGTH_LONG).show();
+
+                Intent mainScreenIntent = new Intent(MainActivity.this.getApplicationContext(), OngoingActivity.class);
+                mainScreenIntent.putExtra(getString(R.string.main_number_of_players), playerCount);
+                mainScreenIntent.putExtra(getString(R.string.main_number_of_questions), questionsSeekBar.getProgress());
+                mainScreenIntent.putExtra(getString(R.string.main_game_duration), (time * 60000L)); // Turns the input # of minutes into ms
+                startActivity(mainScreenIntent);
             }
         });
     }

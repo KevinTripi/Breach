@@ -32,16 +32,16 @@ public class OngoingActivity extends AppCompatActivity {
 
 
     // region Intent stuff
-    private Intent startScreenIntent = getIntent();
+    private Intent mainScreenIntent;
+    
+    private long importedGameDuration;
+    private int importedPlayerAmount;
+    private int importedQuestionAmount;
 
-    // Ex: (in mainActivity) myIntent.putExtra("replace me!", 80000);
-//    private int intentIntDuration = startScreenIntent.getIntExtra("replace me!", 0);
-//    private int intentIntPlayerAmount = startScreenIntent.getIntExtra("replace me!", 2);
-//    private int intentIntQuestionAmount = startScreenIntent.getIntExtra("replace me!", 0);
-    private int intentIntQuestionAmount = 2;
-
+    
+    
     private Intent ongoingScreenIntent;
-
+    
     private String exportedLocationName;
     private String exportedPlayerRole;
     private String exportedReason;
@@ -50,13 +50,13 @@ public class OngoingActivity extends AppCompatActivity {
     // endregion
 
     private boolean timerRunning = false;
-    private long intentIntDuration = 6000;
+//    private long importedGameDuration = 6000;
     private CountDownTimer timer;
 
     // The timer checks pauseGameIndex / totalGameTime every tick. On trigger, decrements pauseGameIndex.
     // Ex: 4 questions for a 5 min game, timer is checking (4 / 5 min), then (3 / 5 min), ...
-    private long totalGameTime = intentIntDuration;
-    private int pauseGameIndex = intentIntQuestionAmount - 1;
+    private long totalGameTime;
+    private int pauseGameIndex;
 
     private DBHelper myDbHelper;
     private SQLiteDatabase db;
@@ -75,18 +75,25 @@ public class OngoingActivity extends AppCompatActivity {
         listLocationsLeft = findViewById(R.id.listview_location_left);
         listLocationsRight = findViewById(R.id.listview_location_right);
 
-        ongoingScreenIntent = new Intent(this, EndActivity.class);
+        mainScreenIntent = getIntent();
+        importedGameDuration = mainScreenIntent.getLongExtra(getString(R.string.main_game_duration), 6000);
+        importedPlayerAmount = mainScreenIntent.getIntExtra(getString(R.string.main_number_of_players), 1);
+        importedQuestionAmount = mainScreenIntent.getIntExtra(getString(R.string.main_number_of_questions), 1);
 
+        totalGameTime = importedGameDuration;
+        pauseGameIndex = importedQuestionAmount - 1;
+
+        ongoingScreenIntent = new Intent(this, EndActivity.class);
         exportedLocationName = getString(R.string.location_name);
         exportedPlayerRole = getString(R.string.player_role);
         exportedReason = getString(R.string.reason);
         exportedReasonPlayer = getString(R.string.reason_player);
-        exportedPlayerAmount = getString(R.string.number_of_players);
+        exportedPlayerAmount = getString(R.string.main_number_of_players);
 
 
         // region main
-        txtTimer.setText(formatMsToTime(intentIntDuration));
-//        txtTimer.setText(formatMsToTime(intentIntDuration));
+        txtTimer.setText(formatMsToTime(importedGameDuration));
+//        txtTimer.setText(formatMsToTime(importedGameDuration));
 
             // region location setting
         createDB();
@@ -113,11 +120,10 @@ public class OngoingActivity extends AppCompatActivity {
 
 
             // region roles
-        int intentIntPlayerAmount = 5;
         arrLocation = getRandomLocationAndRoles();
-        String[] arrPlayers = new String[intentIntPlayerAmount];
+        String[] arrPlayers = new String[importedPlayerAmount];
 
-        for (int i = 0; i < intentIntPlayerAmount; i++) {
+        for (int i = 0; i < importedPlayerAmount; i++) {
             arrPlayers[i] = "Player " + (i + 1);
         }
 
@@ -125,6 +131,12 @@ public class OngoingActivity extends AppCompatActivity {
         ongoingScreenIntent.putExtra(exportedLocationName, arrLocation.remove(0));
         listRoles.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_role, arrPlayers));
             // endregion roles
+
+        int temp = pauseGameIndex;
+        Log.i("Time Intervals", String.format("pauseGameIndex: %d importedQuestionAmount: %d totalGameTime: %d", temp, importedQuestionAmount, totalGameTime));
+        while (temp >= 0) {
+            Log.i("Time Intervals", "Question at: " + formatMsToTime((long)(((double) temp-- / importedQuestionAmount) * totalGameTime) + 500));
+        }
         // endregion main
 
 
@@ -155,21 +167,21 @@ public class OngoingActivity extends AppCompatActivity {
                     timerRunning = true;
                     btnTimer.setText("Pause Timer");
 
-                    timer = new CountDownTimer(intentIntDuration, 500) {
+                    timer = new CountDownTimer(importedGameDuration, 500) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             txtTimer.setText(formatMsToTime(millisUntilFinished));
 //                            txtTimer.setText(millisUntilFinished + "");
 
                             // idea from https://stackoverflow.com/a/6469166
-                            intentIntDuration = millisUntilFinished;
+                            importedGameDuration = millisUntilFinished;
 
-                            if (millisUntilFinished <= (((double) pauseGameIndex / intentIntQuestionAmount) * totalGameTime) + 500) {
+                            if (millisUntilFinished <= (((double) pauseGameIndex / importedQuestionAmount) * totalGameTime) + 500) {
                                 pauseGameIndex--;
-                                Log.i("TimerPlease", String.format("index: %d question am: %d totalTime %.0f output: %.0f", pauseGameIndex, intentIntQuestionAmount, (float) totalGameTime, (float) (((double) pauseGameIndex / intentIntQuestionAmount) * totalGameTime)));
+                                Log.i("TimerPlease", String.format("index: %d question am: %d totalTime %.0f output: %.0f", pauseGameIndex, importedQuestionAmount, (float) totalGameTime, (float) (((double) pauseGameIndex / importedQuestionAmount) * totalGameTime)));
                                 btnTimer.performClick();
                                 ongoingScreenIntent = new Intent(OngoingActivity.this.getApplicationContext(), QuestionActivity.class);
-                                ongoingScreenIntent.putExtra(exportedPlayerAmount, intentIntPlayerAmount);
+                                ongoingScreenIntent.putExtra(exportedPlayerAmount, importedPlayerAmount);
                                 startActivity(ongoingScreenIntent);
                             }
                         }

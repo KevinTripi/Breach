@@ -82,7 +82,7 @@ public class QuestionActivity extends AppCompatActivity {
 
 
         // main
-        importedPlayerAmount = getIntent().getIntExtra(getString(R.string.number_of_players), 1);
+        importedPlayerAmount = getIntent().getIntExtra(getString(R.string.main_number_of_players), 1);
 //        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
         createDB();
         displayRandomQuestion();
