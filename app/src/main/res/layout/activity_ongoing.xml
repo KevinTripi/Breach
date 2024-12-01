@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:orientation="vertical">
             <TextView
                 android:layout_width="match_parent"
@@ -45,27 +45,11 @@
                 android:text="Locations:"
                 android:textSize="@dimen/medium_text"/>
 
-            <!-- Holds the location values. Populated programmatically.
-                 I was thinking of doing a TableLayout, but want the list to be dynamic. -->
-            <LinearLayout
+            <ListView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="20dp">
-
-                <!-- Left column -->
-                <ListView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/listview_location_left"/>
-
-                <!-- Right column -->
-                <ListView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:id="@+id/listview_location_right"/>
-            </LinearLayout>
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:id="@+id/listview_location_left"/>
         </LinearLayout>
 
         <!-- Timer section -->

@@ -25,7 +25,7 @@ import java.util.Random;
 public class OngoingActivity extends AppCompatActivity {
     private Button btnTimer, btnEndGame, btnEndPopup;
     private TextView txtTimer, txtPopupLocation, txtPopupRole, txtPopupPlayer;
-    private ListView listRoles, listLocationsLeft, listLocationsRight;
+    private ListView listRoles, listLocationsLeft;
     private LinearLayout llPopup;
     // region String arrays
     private ArrayList<String> arrLocation;
@@ -77,7 +77,6 @@ public class OngoingActivity extends AppCompatActivity {
 
         listRoles = findViewById(R.id.listview_role);
         listLocationsLeft = findViewById(R.id.listview_location_left);
-        listLocationsRight = findViewById(R.id.listview_location_right);
 
         // Can be either from MainActivity or ResultActivity.
         fromMainIntent = getIntent();
@@ -118,10 +117,8 @@ public class OngoingActivity extends AppCompatActivity {
         } while (curLocations.moveToNext());
         curLocations.close();
 
-//        Toast.makeText(this, "Left:" + arrLeft.toString(), Toast.LENGTH_SHORT).show();
+        listLocationsLeft.setAdapter(new LocationsArrAdapter(this, arrLeft, arrRight));
 
-        listLocationsLeft.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_location, arrLeft));
-        listLocationsRight.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_location, arrRight));
 
 
         arrLocation = getRandomLocationAndRoles();
