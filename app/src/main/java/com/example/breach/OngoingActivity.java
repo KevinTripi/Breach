@@ -40,7 +40,7 @@ public class OngoingActivity extends AppCompatActivity {
 
     
     
-    private Intent ongoingScreenIntent;
+    private Intent gotoEndIntent;
     
     private String exportedLocationName;
     private String exportedPlayerRole;
@@ -83,7 +83,7 @@ public class OngoingActivity extends AppCompatActivity {
         totalGameTime = importedGameDuration;
         pauseGameIndex = importedQuestionAmount - 1;
 
-        ongoingScreenIntent = new Intent(this, EndActivity.class);
+        gotoEndIntent = new Intent(this, EndActivity.class);
         exportedLocationName = getString(R.string.location_name);
         exportedPlayerRole = getString(R.string.player_role);
         exportedReason = getString(R.string.reason);
@@ -128,8 +128,10 @@ public class OngoingActivity extends AppCompatActivity {
         }
 
         // Removes the location name from the list of roles. Saves this location in the intent to be passed to EndActivity.
-        ongoingScreenIntent.putExtra(exportedLocationName, arrLocation.remove(0));
+        gotoEndIntent.putExtra(exportedLocationName, arrLocation.remove(0));
         listRoles.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_role, arrPlayers));
+
+        gotoEndIntent.putExtra(getString(R.string.breacher_name), "steve");
             // endregion roles
 
         int temp = pauseGameIndex;
@@ -150,13 +152,13 @@ public class OngoingActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // I'll just use the EndActivity since all we need the player to see is a location and role.
-//                ongoingScreenIntent.putExtra(exportedPlayerRole, arrLocation.remove(new Random().nextInt(arrLocation.size())));
-//                ongoingScreenIntent.putExtra(exportedReason, exportedReasonPlayer);
+//                gotoEndIntent.putExtra(exportedPlayerRole, arrLocation.remove(new Random().nextInt(arrLocation.size())));
+//                gotoEndIntent.putExtra(exportedReason, exportedReasonPlayer);
 
                 // This toast shows that hitting the back button doesn't re-roll the randLocationIndex, so therefore the deletion of arrLocations is saved, therefore no two roles can be the same.
-//                Toast.makeText(OngoingActivity.this, ongoingScreenIntent.getStringExtra(exportedPlayerRole), Toast.LENGTH_SHORT).show();
+//                Toast.makeText(OngoingActivity.this, gotoEndIntent.getStringExtra(exportedPlayerRole), Toast.LENGTH_SHORT).show();
                 Toast.makeText(OngoingActivity.this, arrLocation.get(new Random().nextInt(arrLocation.size())) + "", Toast.LENGTH_SHORT).show();
-//                startActivity(ongoingScreenIntent);
+//                startActivity(gotoEndIntent);
             }
         });
 
@@ -180,9 +182,9 @@ public class OngoingActivity extends AppCompatActivity {
                                 pauseGameIndex--;
                                 Log.i("TimerPlease", String.format("index: %d question am: %d totalTime %.0f output: %.0f", pauseGameIndex, importedQuestionAmount, (float) totalGameTime, (float) (((double) pauseGameIndex / importedQuestionAmount) * totalGameTime)));
                                 btnTimer.performClick();
-                                ongoingScreenIntent = new Intent(OngoingActivity.this.getApplicationContext(), QuestionActivity.class);
-                                ongoingScreenIntent.putExtra(exportedPlayerAmount, importedPlayerAmount);
-                                startActivity(ongoingScreenIntent);
+                                Intent gotoQuestionIntent = new Intent(OngoingActivity.this.getApplicationContext(), QuestionActivity.class);
+                                gotoQuestionIntent.putExtra(exportedPlayerAmount, importedPlayerAmount);
+                                startActivity(gotoQuestionIntent);
                             }
                         }
 
@@ -200,6 +202,15 @@ public class OngoingActivity extends AppCompatActivity {
 
                     }
                 }
+            }
+        });
+
+        btnEndGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timerRunning = true;
+                btnTimer.performClick();
+                startActivity(gotoEndIntent);
             }
         });
         // endregion Button

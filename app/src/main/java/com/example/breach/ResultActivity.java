@@ -110,6 +110,7 @@ public class ResultActivity extends AppCompatActivity {
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+//                finish();
                 startActivity(new Intent(ResultActivity.this.getApplicationContext(), OngoingActivity.class));
             }
         });

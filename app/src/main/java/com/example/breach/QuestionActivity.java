@@ -38,9 +38,10 @@ public class QuestionActivity extends AppCompatActivity {
     private LinearLayout llInput, llCheckbox;
     private RelativeLayout llSeekbar;
 
-    private int importedPlayerAmount = 4;
+    private int importedPlayerAmount;
+
     // Represents the answers each player inputs. The length is the amount of players in the game.
-    private String[] arrPlayerAnswers = new String[importedPlayerAmount];
+    private String[] arrPlayerAnswers;
     private String questionText;
     private String[] arrOptions = new String[4];
     private int playerIndex = 0;
@@ -48,6 +49,9 @@ public class QuestionActivity extends AppCompatActivity {
 
     private DBHelper myDbHelper;
     private SQLiteDatabase db;
+
+    // Represents how long the timer runs for each person.
+    private long timerLength = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,10 +87,28 @@ public class QuestionActivity extends AppCompatActivity {
 
         // main
         importedPlayerAmount = getIntent().getIntExtra(getString(R.string.main_number_of_players), 1);
+        arrPlayerAnswers = new String[importedPlayerAmount];
 //        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
         createDB();
         displayRandomQuestion();
-        startTimer(10000);
+
+        progBarTime.setMax((int) timerLength);
+        CountDownTimer timer = new CountDownTimer(timerLength, 400) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                progBarTime.setProgress((int) millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                progBarTime.setProgress(0);
+                // TODO: Maybe have a random input be submitted for the player?
+//                switch (new Random().nextInt(4)) {
+//                    case 0:
+//
+//                }
+            }
+        }.start();
 
 
         // region onClickListeners()
@@ -143,6 +165,13 @@ public class QuestionActivity extends AppCompatActivity {
                     return;
                 } else {
                     txtPlayer.setText("Player " + (playerIndex + 1));
+
+                    try {
+                        timer.cancel();
+                    } catch (Exception e) {
+
+                    }
+                    timer.start();
                 }
             }
         });
@@ -164,26 +193,6 @@ public class QuestionActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void startTimer(long ms) {
-        progBarTime.setMax((int) ms);
-        new CountDownTimer(ms, 400) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                progBarTime.setProgress((int) millisUntilFinished);
-            }
-
-            @Override
-            public void onFinish() {
-                progBarTime.setProgress(0);
-                // Maybe have a random input be submitted for the player?
-//                switch (new Random().nextInt(4)) {
-//                    case 0:
-//
-//                }
-            }
-        }.start();
     }
 
     // Depending on the argument, the LinearLayout with the user inputs will display one type of input.
