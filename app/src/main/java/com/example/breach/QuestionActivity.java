@@ -361,6 +361,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
 
         questionType = result.getString(0);
+        result.close();
         setActivityInputType();
     }
 

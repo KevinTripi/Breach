@@ -281,6 +281,8 @@ public class OngoingActivity extends AppCompatActivity {
         }
 
         Log.i("Ongoing db", Arrays.toString(arrReturn.toArray()));
+        result.close();
+        result2.close();
         return arrReturn;
     }
 
@@ -301,16 +303,5 @@ public class OngoingActivity extends AppCompatActivity {
         }
 
         db = myDbHelper.getWritableDatabase();
-    }
-
-    public void getResult(String query) {
-
-        Cursor result = db.rawQuery(query, null);
-        result.moveToFirst();
-
-        do {
-//            Log.i("db", result.getString(1));
-        } while (result.moveToNext());
-
     }
 }
