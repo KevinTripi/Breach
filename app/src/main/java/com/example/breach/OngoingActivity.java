@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,10 +23,10 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class OngoingActivity extends AppCompatActivity {
-    private Button btnTimer, btnEndGame;
-    private TextView txtTimer;
+    private Button btnTimer, btnEndGame, btnEndPopup;
+    private TextView txtTimer, txtPopupLocation, txtPopupRole, txtPopupPlayer;
     private ListView listRoles, listLocationsLeft, listLocationsRight;
-
+    private LinearLayout llPopup;
     // region String arrays
     private ArrayList<String> arrLocation;
     // endregion
@@ -65,8 +66,14 @@ public class OngoingActivity extends AppCompatActivity {
 
         btnTimer = findViewById(R.id.button_timer);
         btnEndGame = findViewById(R.id.button_end_game);
+        btnEndPopup = findViewById(R.id.button_end_popup);
 
         txtTimer = findViewById(R.id.textview_timer);
+        txtPopupLocation = findViewById(R.id.textview_popup_location);
+        txtPopupRole = findViewById(R.id.textview_popup_role);
+        txtPopupPlayer = findViewById(R.id.textview_popup_player);
+
+        llPopup = findViewById(R.id.linearlayout_popup_role);
 
         listRoles = findViewById(R.id.listview_role);
         listLocationsLeft = findViewById(R.id.listview_location_left);
@@ -87,6 +94,7 @@ public class OngoingActivity extends AppCompatActivity {
 
 
         // region main
+        llPopup.setVisibility(View.GONE);
         txtTimer.setText(formatMsToTime(importedGameDuration));
 //        txtTimer.setText(formatMsToTime(importedGameDuration));
 
@@ -161,8 +169,20 @@ public class OngoingActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 //                Toast.makeText(OngoingActivity.this, arrLocation.get(new Random().nextInt(arrLocation.size())) + "", Toast.LENGTH_SHORT).show();
                 if (!arrPlayerClicked[position]) {
-                    Toast.makeText(OngoingActivity.this, arrPlayerRoles[position], Toast.LENGTH_SHORT).show();
+                    txtPopupPlayer.setText("P" + (position + 1));
+                    if (position == breacherIndex) {
+                        txtPopupLocation.setText("???");
+                    } else {
+                        txtPopupLocation.setText(exportedLocation);
+                    }
+                    txtPopupRole.setText(arrPlayerRoles[position]);
+                    llPopup.setVisibility(View.VISIBLE);
+
+                    view.setBackgroundColor(getColor(R.color.white));
                     arrPlayerClicked[position] = true;
+//                    Toast.makeText(OngoingActivity.this, arrPlayerRoles[position], Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(OngoingActivity.this, "Player " + (position + 1) + " already clicked!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -209,6 +229,13 @@ public class OngoingActivity extends AppCompatActivity {
 
                     }
                 }
+            }
+        });
+
+        btnEndPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                llPopup.setVisibility(View.GONE);
             }
         });
 
