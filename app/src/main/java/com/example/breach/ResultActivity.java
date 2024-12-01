@@ -23,7 +23,7 @@ public class ResultActivity extends AppCompatActivity {
     private TextView[] txtOptions = new TextView[4];
     private TextView[] txtOptionPlayers = new TextView[4];
     private Button btnExit;
-    private Intent questionScreenIntent;
+    private Intent fromQuestionIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,12 +38,12 @@ public class ResultActivity extends AppCompatActivity {
             txtOptionPlayers[i] = llOptions.getChildAt(i).findViewById(R.id.textview_player);
         }
 
-        questionScreenIntent = getIntent();
-        ArrayList<String> arrOptions = questionScreenIntent.getStringArrayListExtra(getString(R.string.question_array_options));
-        ArrayList<String> arrAnswers = questionScreenIntent.getStringArrayListExtra(getString(R.string.question_array_answers));
+        fromQuestionIntent = getIntent();
+        ArrayList<String> arrOptions = fromQuestionIntent.getStringArrayListExtra(getString(R.string.question_array_options));
+        ArrayList<String> arrAnswers = fromQuestionIntent.getStringArrayListExtra(getString(R.string.question_array_answers));
 
         if (arrOptions != null && arrAnswers != null) {
-            switch (questionScreenIntent.getStringExtra(getString(R.string.question_type))) {
+            switch (fromQuestionIntent.getStringExtra(getString(R.string.question_type))) {
                 case "SB":
                     int total = Integer.parseInt(arrOptions.get(2));
                     int increment = total / txtOptions.length;

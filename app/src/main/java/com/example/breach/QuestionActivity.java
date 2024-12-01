@@ -38,6 +38,7 @@ public class QuestionActivity extends AppCompatActivity {
     private LinearLayout llInput, llCheckbox;
     private RelativeLayout llSeekbar;
 
+    private Intent fromOngoingIntent;
     private int importedPlayerAmount;
 
     // Represents the answers each player inputs. The length is the amount of players in the game.
@@ -155,13 +156,14 @@ public class QuestionActivity extends AppCompatActivity {
                 Log.i("Answers", "arrPlayerAnswers: " + Arrays.toString(arrPlayerAnswers));
 
                 if (playerIndex >= arrPlayerAnswers.length) {
-                    Intent resultScreenIntent = new Intent(QuestionActivity.this.getApplicationContext(), ResultActivity.class);
-                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_options), new ArrayList<String>(Arrays.asList(arrOptions)));
-                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_answers), new ArrayList<String>(Arrays.asList(arrPlayerAnswers)));
-                    resultScreenIntent.putExtra(getString(R.string.question_type), questionType);
-                    resultScreenIntent.putExtra(getString(R.string.question_text), questionText);
-                    Log.i("beforeResult", questionType + "   " + resultScreenIntent.getStringExtra(getString(R.string.question_type)));
-                    startActivity(resultScreenIntent);
+                    Intent gotoResultIntent = new Intent(QuestionActivity.this.getApplicationContext(), ResultActivity.class);
+                    gotoResultIntent.putStringArrayListExtra(getString(R.string.question_array_options), new ArrayList<String>(Arrays.asList(arrOptions)));
+                    gotoResultIntent.putStringArrayListExtra(getString(R.string.question_array_answers), new ArrayList<String>(Arrays.asList(arrPlayerAnswers)));
+                    gotoResultIntent.putExtra(getString(R.string.question_type), questionType);
+                    gotoResultIntent.putExtra(getString(R.string.question_text), questionText);
+
+//                    Log.i("beforeResult", questionType + "   " + gotoResultIntent.getStringExtra(getString(R.string.question_type)));
+                    startActivity(gotoResultIntent);
                     return;
                 } else {
                     txtPlayer.setText("Player " + (playerIndex + 1));
