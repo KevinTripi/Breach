@@ -29,7 +29,7 @@ public class EndActivity extends AppCompatActivity {
         Intent fromOngoingIntent = getIntent();
 
         txtLocation.setText(fromOngoingIntent.getStringExtra(getString(R.string.location_name)));
-        txtBreachers.setText("P" + fromOngoingIntent.getStringExtra(getString(R.string.breacher_index)));
+        txtBreachers.setText("P" + (fromOngoingIntent.getIntExtra(getString(R.string.breacher_index), 0) + 1));
 
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
