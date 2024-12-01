@@ -161,6 +161,7 @@ public class QuestionActivity extends AppCompatActivity {
                 Log.i("Answers", "arrPlayerAnswers: " + Arrays.toString(arrPlayerAnswers));
 
                 if (playerIndex >= arrPlayerAnswers.length) {
+                    timer.cancel();
                     inflateResultScreen();
 //                    Intent gotoResultIntent = new Intent(QuestionActivity.this.getApplicationContext(), ResultActivity.class);
 //                    gotoResultIntent.putStringArrayListExtra(getString(R.string.question_array_options), new ArrayList<String>(Arrays.asList(arrOptions)));
@@ -242,9 +243,9 @@ public class QuestionActivity extends AppCompatActivity {
                         for (int j = 0; j < arrPlayerAnswers.length; j++) {
                             int result = Integer.parseInt(arrPlayerAnswers[j]);
                             if (result < ceiling && result >= floor) {
-                                txtOptionPlayers[i].setText(String.format("%s%s: %s\n", txtOptionPlayers[i].getText(), formatPlayerText(j), arrPlayerAnswers[j]));
+                                txtOptionPlayers[i].setText(String.format("%s%s: %s\n", txtOptionPlayers[i].getText(), formatPlayerText(j + 1), arrPlayerAnswers[j]));
                             } else if (result >= total) {
-                                txtOptionPlayers[txtOptionPlayers.length - 1].setText(String.format("%s%s: %s\n", txtOptionPlayers[txtOptionPlayers.length - 1].getText(), formatPlayerText(j), arrPlayerAnswers[j]));
+                                txtOptionPlayers[txtOptionPlayers.length - 1].setText(String.format("%s%s: %s\n", txtOptionPlayers[txtOptionPlayers.length - 1].getText(), formatPlayerText(j + 1), arrPlayerAnswers[j]));
                             }
                         }
                     }
