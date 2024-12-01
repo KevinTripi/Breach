@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,41 +23,38 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class OngoingActivity extends AppCompatActivity {
-    private Button btnTimer, btnEndGame;
-    private TextView txtTimer;
-    private ListView listRoles, listLocationsLeft, listLocationsRight;
-
+    private Button btnTimer, btnEndGame, btnEndPopup;
+    private TextView txtTimer, txtPopupLocation, txtPopupRole, txtPopupPlayer;
+    private ListView listRoles, listLocationsLeft;
+    private LinearLayout llPopup;
     // region String arrays
     private ArrayList<String> arrLocation;
     // endregion
 
 
     // region Intent stuff
-    private Intent startScreenIntent = getIntent();
-
-    // Ex: (in mainActivity) myIntent.putExtra("replace me!", 80000);
-//    private int intentIntDuration = startScreenIntent.getIntExtra("replace me!", 0);
-//    private int intentIntPlayerAmount = startScreenIntent.getIntExtra("replace me!", 2);
-//    private int intentIntQuestionAmount = startScreenIntent.getIntExtra("replace me!", 0);
-    private int intentIntQuestionAmount = 2;
-
-    private Intent ongoingScreenIntent;
+    private Intent fromMainIntent;
+    
+    private long importedGameDuration;
+    private int importedPlayerAmount;
+    private int importedQuestionAmount;
 
     private String exportedLocationName;
-    private String exportedPlayerRole;
-    private String exportedReason;
-    private String exportedReasonPlayer;
-    private String exportedPlayerAmount;
+    private String exportedLocation;
+    private String exportedPlayerAmountName;
     // endregion
 
+    private String[] arrPlayerRoles;
+    private boolean[] arrPlayerClicked;
+    private int breacherIndex;
+
     private boolean timerRunning = false;
-    private long intentIntDuration = 6000;
     private CountDownTimer timer;
 
     // The timer checks pauseGameIndex / totalGameTime every tick. On trigger, decrements pauseGameIndex.
     // Ex: 4 questions for a 5 min game, timer is checking (4 / 5 min), then (3 / 5 min), ...
-    private long totalGameTime = intentIntDuration;
-    private int pauseGameIndex = intentIntQuestionAmount - 1;
+    private long totalGameTime;
+    private int pauseGameIndex;
 
     private DBHelper myDbHelper;
     private SQLiteDatabase db;
@@ -68,27 +66,42 @@ public class OngoingActivity extends AppCompatActivity {
 
         btnTimer = findViewById(R.id.button_timer);
         btnEndGame = findViewById(R.id.button_end_game);
+        btnEndPopup = findViewById(R.id.button_end_popup);
 
         txtTimer = findViewById(R.id.textview_timer);
+        txtPopupLocation = findViewById(R.id.textview_popup_location);
+        txtPopupRole = findViewById(R.id.textview_popup_role);
+        txtPopupPlayer = findViewById(R.id.textview_popup_player);
+
+        llPopup = findViewById(R.id.linearlayout_popup_role);
 
         listRoles = findViewById(R.id.listview_role);
         listLocationsLeft = findViewById(R.id.listview_location_left);
-        listLocationsRight = findViewById(R.id.listview_location_right);
 
-        ongoingScreenIntent = new Intent(this, EndActivity.class);
+        // Can be either from MainActivity or ResultActivity.
+        fromMainIntent = getIntent();
+        importedGameDuration = fromMainIntent.getLongExtra(getString(R.string.main_game_duration), 6000);
+        importedPlayerAmount = fromMainIntent.getIntExtra(getString(R.string.main_number_of_players), 1);
+        importedQuestionAmount = fromMainIntent.getIntExtra(getString(R.string.main_number_of_questions), 1);
+        // Although MainActivity doesn't pass location, ResultActivity does, and so must check to prevent creating a new location.
+
+        totalGameTime = importedGameDuration;
+        pauseGameIndex = importedQuestionAmount - 1;
 
         exportedLocationName = getString(R.string.location_name);
-        exportedPlayerRole = getString(R.string.player_role);
-        exportedReason = getString(R.string.reason);
-        exportedReasonPlayer = getString(R.string.reason_player);
-        exportedPlayerAmount = getString(R.string.number_of_players);
+        exportedPlayerAmountName = getString(R.string.main_number_of_players);
 
 
         // region main
-        txtTimer.setText(formatMsToTime(intentIntDuration));
-//        txtTimer.setText(formatMsToTime(intentIntDuration));
+        llPopup.setVisibility(View.GONE);
+        txtTimer.setText(formatMsToTime(importedGameDuration));
+//        txtTimer.setText(formatMsToTime(importedGameDuration));
 
-            // region location setting
+        // from https://stackoverflow.com/a/2364887
+        arrPlayerClicked = new boolean[importedPlayerAmount];
+
+        // region location setting
+
         createDB();
         Cursor curLocations = db.rawQuery("SELECT * FROM Locations", null);
         curLocations.moveToFirst();
@@ -102,29 +115,43 @@ public class OngoingActivity extends AppCompatActivity {
                 arrRight.add(curLocations.getString(0));
             }
         } while (curLocations.moveToNext());
+        curLocations.close();
 
-//        Toast.makeText(this, "Left:" + arrLeft.toString(), Toast.LENGTH_SHORT).show();
-
-        listLocationsLeft.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_location, arrLeft));
-        listLocationsRight.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_location, arrRight));
-            // endregion location
+        listLocationsLeft.setAdapter(new LocationsArrAdapter(this, arrLeft, arrRight));
 
 
 
-
-            // region roles
-        int intentIntPlayerAmount = 5;
         arrLocation = getRandomLocationAndRoles();
-        String[] arrPlayers = new String[intentIntPlayerAmount];
+        // Removes the location name from the list of roles. Saves this location in the intent to be passed to EndActivity.
+        exportedLocation = arrLocation.remove(0);
 
-        for (int i = 0; i < intentIntPlayerAmount; i++) {
+        // endregion location
+
+        // region roles
+        String[] arrPlayers = new String[importedPlayerAmount];
+
+        for (int i = 0; i < importedPlayerAmount; i++) {
             arrPlayers[i] = "Player " + (i + 1);
         }
 
-        // Removes the location name from the list of roles. Saves this location in the intent to be passed to EndActivity.
-        ongoingScreenIntent.putExtra(exportedLocationName, arrLocation.remove(0));
         listRoles.setAdapter(new ArrayAdapter<>(this, R.layout.list_item_role, arrPlayers));
-            // endregion roles
+
+        breacherIndex = new Random().nextInt(importedPlayerAmount);
+        arrPlayerRoles = new String[importedPlayerAmount];
+
+        for (int i = 0; i < arrPlayerRoles.length; i++) {
+            arrPlayerRoles[i] = arrLocation.remove(new Random().nextInt(arrLocation.size()));
+        }
+
+        arrPlayerRoles[breacherIndex] = "Breacher";
+
+        // endregion roles
+
+        int temp = pauseGameIndex;
+        Log.i("Time Intervals", String.format("pauseGameIndex: %d importedQuestionAmount: %d totalGameTime: %d", temp, importedQuestionAmount, totalGameTime));
+        while (temp >= 0) {
+            Log.i("Time Intervals", "Question at: " + formatMsToTime((long)(((double) temp-- / importedQuestionAmount) * totalGameTime) + 500));
+        }
         // endregion main
 
 
@@ -137,14 +164,23 @@ public class OngoingActivity extends AppCompatActivity {
         listRoles.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // I'll just use the EndActivity since all we need the player to see is a location and role.
-//                ongoingScreenIntent.putExtra(exportedPlayerRole, arrLocation.remove(new Random().nextInt(arrLocation.size())));
-//                ongoingScreenIntent.putExtra(exportedReason, exportedReasonPlayer);
+//                Toast.makeText(OngoingActivity.this, arrLocation.get(new Random().nextInt(arrLocation.size())) + "", Toast.LENGTH_SHORT).show();
+                if (!arrPlayerClicked[position]) {
+                    txtPopupPlayer.setText("P" + (position + 1));
+                    if (position == breacherIndex) {
+                        txtPopupLocation.setText("???");
+                    } else {
+                        txtPopupLocation.setText(exportedLocation);
+                    }
+                    txtPopupRole.setText(arrPlayerRoles[position]);
+                    llPopup.setVisibility(View.VISIBLE);
 
-                // This toast shows that hitting the back button doesn't re-roll the randLocationIndex, so therefore the deletion of arrLocations is saved, therefore no two roles can be the same.
-//                Toast.makeText(OngoingActivity.this, ongoingScreenIntent.getStringExtra(exportedPlayerRole), Toast.LENGTH_SHORT).show();
-                Toast.makeText(OngoingActivity.this, arrLocation.get(new Random().nextInt(arrLocation.size())) + "", Toast.LENGTH_SHORT).show();
-//                startActivity(ongoingScreenIntent);
+                    view.setBackgroundColor(getColor(R.color.white));
+                    arrPlayerClicked[position] = true;
+//                    Toast.makeText(OngoingActivity.this, arrPlayerRoles[position], Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(OngoingActivity.this, "Player " + (position + 1) + " already clicked!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -155,22 +191,24 @@ public class OngoingActivity extends AppCompatActivity {
                     timerRunning = true;
                     btnTimer.setText("Pause Timer");
 
-                    timer = new CountDownTimer(intentIntDuration, 500) {
+                    timer = new CountDownTimer(importedGameDuration, 500) {
                         @Override
                         public void onTick(long millisUntilFinished) {
                             txtTimer.setText(formatMsToTime(millisUntilFinished));
 //                            txtTimer.setText(millisUntilFinished + "");
 
                             // idea from https://stackoverflow.com/a/6469166
-                            intentIntDuration = millisUntilFinished;
+                            importedGameDuration = millisUntilFinished;
 
-                            if (millisUntilFinished <= (((double) pauseGameIndex / intentIntQuestionAmount) * totalGameTime) + 500) {
+                            if (millisUntilFinished <= (((double) pauseGameIndex / importedQuestionAmount) * totalGameTime) + 500) {
                                 pauseGameIndex--;
-                                Log.i("TimerPlease", String.format("index: %d question am: %d totalTime %.0f output: %.0f", pauseGameIndex, intentIntQuestionAmount, (float) totalGameTime, (float) (((double) pauseGameIndex / intentIntQuestionAmount) * totalGameTime)));
+//                                Log.i("TimerPlease", String.format("index: %d question am: %d totalTime %.0f output: %.0f", pauseGameIndex, importedQuestionAmount, (float) totalGameTime, (float) (((double) pauseGameIndex / importedQuestionAmount) * totalGameTime)));
                                 btnTimer.performClick();
-                                ongoingScreenIntent = new Intent(OngoingActivity.this.getApplicationContext(), QuestionActivity.class);
-                                ongoingScreenIntent.putExtra(exportedPlayerAmount, intentIntPlayerAmount);
-                                startActivity(ongoingScreenIntent);
+                                Intent gotoQuestionIntent = new Intent(OngoingActivity.this.getApplicationContext(), QuestionActivity.class);
+                                gotoQuestionIntent.putExtra(exportedPlayerAmountName, importedPlayerAmount);
+                                gotoQuestionIntent.putExtra(exportedLocationName, exportedLocation);
+                                gotoQuestionIntent.putExtra(getString(R.string.breacher_index), breacherIndex);
+                                startActivity(gotoQuestionIntent);
                             }
                         }
 
@@ -188,6 +226,26 @@ public class OngoingActivity extends AppCompatActivity {
 
                     }
                 }
+            }
+        });
+
+        btnEndPopup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                llPopup.setVisibility(View.GONE);
+            }
+        });
+
+        btnEndGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timerRunning = true;
+                btnTimer.performClick();
+
+                Intent gotoEndIntent = new Intent(OngoingActivity.this.getApplicationContext(), EndActivity.class);
+                gotoEndIntent.putExtra(exportedLocationName, exportedLocation);
+                gotoEndIntent.putExtra(getString(R.string.breacher_index), breacherIndex);
+                startActivity(gotoEndIntent);
             }
         });
         // endregion Button
@@ -223,6 +281,8 @@ public class OngoingActivity extends AppCompatActivity {
         }
 
         Log.i("Ongoing db", Arrays.toString(arrReturn.toArray()));
+        result.close();
+        result2.close();
         return arrReturn;
     }
 
@@ -243,16 +303,5 @@ public class OngoingActivity extends AppCompatActivity {
         }
 
         db = myDbHelper.getWritableDatabase();
-    }
-
-    public void getResult(String query) {
-
-        Cursor result = db.rawQuery(query, null);
-        result.moveToFirst();
-
-        do {
-//            Log.i("db", result.getString(1));
-        } while (result.moveToNext());
-
     }
 }

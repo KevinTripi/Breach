@@ -29,18 +29,20 @@ public class QuestionActivity extends AppCompatActivity {
 
     private ProgressBar progBarTime;
     private TextView txtQuestion, txtSeekStart, txtSeekEnd, txtPlayer, txtSeekProgress;
-    private Button btnSubmit;
+    private Button btnSubmit, btnResultExit;
     private CheckBox cbAnswer0, cbAnswer1, cbAnswer2, cbAnswer3;;
     private RadioButton rbAnswer0, rbAnswer1, rbAnswer2, rbAnswer3;
     private SeekBar seekAnswer;
 
     private RadioGroup rgAnswer;
-    private LinearLayout llInput, llCheckbox;
+    private LinearLayout llInput, llCheckbox, llResults, llQuestions;
     private RelativeLayout llSeekbar;
 
-    private int importedPlayerAmount = 4;
+    private Intent fromOngoingIntent;
+    private int importedPlayerAmount;
+
     // Represents the answers each player inputs. The length is the amount of players in the game.
-    private String[] arrPlayerAnswers = new String[importedPlayerAmount];
+    private String[] arrPlayerAnswers;
     private String questionText;
     private String[] arrOptions = new String[4];
     private int playerIndex = 0;
@@ -48,6 +50,9 @@ public class QuestionActivity extends AppCompatActivity {
 
     private DBHelper myDbHelper;
     private SQLiteDatabase db;
+
+    // Represents how long the timer runs for each person.
+    private long timerLength = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,7 @@ public class QuestionActivity extends AppCompatActivity {
         progBarTime = findViewById(R.id.progressbar_time_left);
         txtQuestion = findViewById(R.id.textview_question);
         btnSubmit = findViewById(R.id.button_submit);
+        btnResultExit = findViewById(R.id.button_results_submit);
         txtPlayer = findViewById(R.id.textview_player);
 
         cbAnswer0 = findViewById(R.id.checkbox_0);
@@ -77,16 +83,38 @@ public class QuestionActivity extends AppCompatActivity {
         llInput = findViewById(R.id.linearlayout_input);
         llCheckbox = findViewById(R.id.linearlayout_answer_checkbox);
         llSeekbar = findViewById(R.id.linearlayout_answer_seekbar);
+        llResults = findViewById(R.id.linearlayout_results);
+        llQuestions = findViewById(R.id.linearlayout_questions);
         rgAnswer = findViewById(R.id.radiogroup_answer);
 
 
 
         // main
-        importedPlayerAmount = getIntent().getIntExtra(getString(R.string.number_of_players), 1);
+        llQuestions.setVisibility(View.VISIBLE);
+        llResults.setVisibility(View.GONE);
+        importedPlayerAmount = getIntent().getIntExtra(getString(R.string.main_number_of_players), 1);
+        arrPlayerAnswers = new String[importedPlayerAmount];
 //        Toast.makeText(this, "Number of players: " + importedPlayerAmount, Toast.LENGTH_SHORT).show();
         createDB();
         displayRandomQuestion();
-        startTimer(10000);
+
+        progBarTime.setMax((int) timerLength);
+        CountDownTimer timer = new CountDownTimer(timerLength, 400) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                progBarTime.setProgress((int) millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                progBarTime.setProgress(0);
+                // TODO: Maybe have a random input be submitted for the player?
+//                switch (new Random().nextInt(4)) {
+//                    case 0:
+//
+//                }
+            }
+        }.start();
 
 
         // region onClickListeners()
@@ -133,16 +161,25 @@ public class QuestionActivity extends AppCompatActivity {
                 Log.i("Answers", "arrPlayerAnswers: " + Arrays.toString(arrPlayerAnswers));
 
                 if (playerIndex >= arrPlayerAnswers.length) {
-                    Intent resultScreenIntent = new Intent(QuestionActivity.this.getApplicationContext(), ResultActivity.class);
-                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_options), new ArrayList<String>(Arrays.asList(arrOptions)));
-                    resultScreenIntent.putStringArrayListExtra(getString(R.string.question_array_answers), new ArrayList<String>(Arrays.asList(arrPlayerAnswers)));
-                    resultScreenIntent.putExtra(getString(R.string.question_type), questionType);
-                    resultScreenIntent.putExtra(getString(R.string.question_text), questionText);
-                    Log.i("beforeResult", questionType + "   " + resultScreenIntent.getStringExtra(getString(R.string.question_type)));
-                    startActivity(resultScreenIntent);
-                    return;
+                    timer.cancel();
+                    inflateResultScreen();
+//                    Intent gotoResultIntent = new Intent(QuestionActivity.this.getApplicationContext(), ResultActivity.class);
+//                    gotoResultIntent.putStringArrayListExtra(getString(R.string.question_array_options), new ArrayList<String>(Arrays.asList(arrOptions)));
+//                    gotoResultIntent.putStringArrayListExtra(getString(R.string.question_array_answers), new ArrayList<String>(Arrays.asList(arrPlayerAnswers)));
+//                    gotoResultIntent.putExtra(getString(R.string.question_type), questionType);
+//                    gotoResultIntent.putExtra(getString(R.string.question_text), questionText);
+//
+////                    Log.i("beforeResult", questionType + "   " + gotoResultIntent.getStringExtra(getString(R.string.question_type)));
+//                    startActivity(gotoResultIntent);
                 } else {
                     txtPlayer.setText("Player " + (playerIndex + 1));
+
+                    try {
+                        timer.cancel();
+                    } catch (Exception e) {
+
+                    }
+                    timer.start();
                 }
             }
         });
@@ -164,26 +201,98 @@ public class QuestionActivity extends AppCompatActivity {
 
             }
         });
+
+        btnResultExit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
-    private void startTimer(long ms) {
-        progBarTime.setMax((int) ms);
-        new CountDownTimer(ms, 400) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                progBarTime.setProgress((int) millisUntilFinished);
-            }
+    private void inflateResultScreen() {
+        TextView[] txtOptions = new TextView[4];
+        TextView[] txtOptionPlayers = new TextView[4];
+        LinearLayout llOptions = findViewById(R.id.linearlayout_results_options);
 
-            @Override
-            public void onFinish() {
-                progBarTime.setProgress(0);
-                // Maybe have a random input be submitted for the player?
-//                switch (new Random().nextInt(4)) {
-//                    case 0:
-//
-//                }
+        llQuestions.setVisibility(View.GONE);
+        llResults.setVisibility(View.VISIBLE);
+
+        for (int i = 0; i < txtOptions.length; i++) {
+            txtOptions[i] = llOptions.getChildAt(i).findViewById(R.id.textview_option);
+            txtOptionPlayers[i] = llOptions.getChildAt(i).findViewById(R.id.textview_player);
+        }
+
+        if (arrOptions != null && arrPlayerAnswers != null) {
+            switch (questionType) {
+                case "SB":
+                    int total = Integer.parseInt(arrOptions[2]);
+                    int increment = total / txtOptions.length;
+
+//                    for (int i = 0; i < txtOptionPlayers.length; i++) {
+//                        txtOptionPlayers[i].setText("");
+//                    }
+
+                    for (int i = 0; i < txtOptions.length; i++) {
+                        int floor = increment * i;
+                        int ceiling = increment * (i + 1);
+
+                        txtOptions[i].setText(String.format("%d - %d:", floor, ceiling));
+                        txtOptionPlayers[i].setText("");
+
+                        for (int j = 0; j < arrPlayerAnswers.length; j++) {
+                            int result = Integer.parseInt(arrPlayerAnswers[j]);
+                            if (result < ceiling && result >= floor) {
+                                txtOptionPlayers[i].setText(String.format("%s%s: %s\n", txtOptionPlayers[i].getText(), formatPlayerText(j + 1), arrPlayerAnswers[j]));
+                            } else if (result >= total) {
+                                txtOptionPlayers[txtOptionPlayers.length - 1].setText(String.format("%s%s: %s\n", txtOptionPlayers[txtOptionPlayers.length - 1].getText(), formatPlayerText(j + 1), arrPlayerAnswers[j]));
+                            }
+                        }
+                    }
+                    break;
+
+                case "RB":
+                    for (int i = 0; i < txtOptions.length; i++) {
+                        String option = arrOptions[i];
+                        String optionPlayerText = "";
+
+                        txtOptions[i].setText(option);
+
+                        for (int j = 0; j < arrPlayerAnswers.length; j++) {
+                            if (arrPlayerAnswers[j].equals(option)) {
+                                optionPlayerText += formatPlayerText(j + 1) + "\n";
+                            }
+                        }
+
+                        txtOptionPlayers[i].setText(optionPlayerText);
+                    }
+                    break;
+
+                default:
+                    for (int i = 0; i < arrOptions.length; i++) {
+                        txtOptions[i].setText(arrOptions[i]);
+                        txtOptionPlayers[i].setText("");
+                    }
+
+                    for (int i = 0; i < arrPlayerAnswers.length; i++) {
+                        String answer = arrPlayerAnswers[i];
+
+                        for (int j = 0; j < answer.length(); j++) {
+                            if (answer.charAt(j) == 'T') {
+                                txtOptionPlayers[j].setText(txtOptionPlayers[j].getText() + formatPlayerText(i + 1) + "\n");
+                            }
+
+                        }
+                    }
+                    break;
             }
-        }.start();
+        }
+
+    }
+
+
+    private String formatPlayerText(int index) {
+        return "P" + index;
     }
 
     // Depending on the argument, the LinearLayout with the user inputs will display one type of input.
@@ -252,6 +361,7 @@ public class QuestionActivity extends AppCompatActivity {
         }
 
         questionType = result.getString(0);
+        result.close();
         setActivityInputType();
     }
 
