@@ -6,6 +6,8 @@
     android:textSize="@dimen/small_text"
     android:textAlignment="center"
     android:paddingVertical="3dp"
+    android:textColor="@color/primary_text_color"
+
     >
 
 </TextView>

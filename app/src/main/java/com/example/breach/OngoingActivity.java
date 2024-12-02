@@ -175,7 +175,7 @@ public class OngoingActivity extends AppCompatActivity {
                     txtPopupRole.setText(arrPlayerRoles[position]);
                     llPopup.setVisibility(View.VISIBLE);
 
-                    view.setBackgroundColor(getColor(R.color.white));
+                    view.setBackgroundColor(getColor(R.color.primary_bg_color)); //this the color of the bg yo
                     arrPlayerClicked[position] = true;
 //                    Toast.makeText(OngoingActivity.this, arrPlayerRoles[position], Toast.LENGTH_SHORT).show();
                 } else {

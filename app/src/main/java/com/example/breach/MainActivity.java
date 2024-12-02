@@ -87,6 +87,7 @@ public class MainActivity extends AppCompatActivity {
             playerCount++;
             TextView newPlayer = new TextView(this);
             newPlayer.setText("Player " + playerCount);
+            newPlayer.setTextColor(getColor(R.color.primary_text_color));
             playersContainer.addView(newPlayer);
         } else {
             Toast.makeText(this, "Max players reached!", Toast.LENGTH_SHORT).show();

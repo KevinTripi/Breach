@@ -14,6 +14,7 @@
         android:id="@+id/textview_left"
         android:paddingHorizontal="10dp"
         android:textSize="@dimen/small_text"
+        android:textColor="@color/primary_text_color"
         />
 
     <TextView
@@ -24,6 +25,8 @@
         android:text=""
         android:paddingHorizontal="10dp"
         android:textSize="@dimen/small_text"
+        android:textColor="@color/primary_text_color"
         android:id="@+id/textview_right"/>
+
 
 </LinearLayout>

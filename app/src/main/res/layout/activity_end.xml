@@ -8,7 +8,8 @@
     tools:context=".EndActivity"
     android:orientation="vertical"
     android:paddingVertical="@dimen/activity_padding_vertical"
-    android:paddingHorizontal="@dimen/activity_padding_horizontal">
+    android:paddingHorizontal="@dimen/activity_padding_horizontal"
+    android:background="@drawable/screen_stroke_background">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Location:"
-            android:textSize="@dimen/medium_text"/>
+            android:textSize="@dimen/medium_text"
+            android:textColor="@color/float_text_color"
+            />
 
         <TextView
             android:layout_width="match_parent"
@@ -28,7 +31,8 @@
             android:id="@+id/textview_end_location"
             android:text="Location:"
             android:textSize="@dimen/medium_text"
-            android:paddingStart="10dp"/>
+            android:paddingStart="10dp"
+            android:textColor="@color/float_text_color"/>
 
     </LinearLayout>
 
@@ -44,7 +48,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Breacher:"
-            android:textSize="@dimen/medium_text"/>
+            android:textSize="@dimen/medium_text"
+            android:textColor="@color/float_text_color"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -52,7 +57,8 @@
             android:text="Location:"
             android:id="@+id/textview_end_breachers"
             android:textSize="@dimen/medium_text"
-            android:paddingStart="10dp"/>
+            android:paddingStart="10dp"
+            android:textColor="@color/float_text_color"/>
 
     </LinearLayout>
 
@@ -62,5 +68,6 @@
         android:layout_height="wrap_content"
         android:text="Exit"
         android:id="@+id/button_end_game"
-        android:textSize="@dimen/medium_text"/>
+        android:textSize="@dimen/medium_text"
+        android:background="@drawable/button_3d_background"/>
 </LinearLayout>
