@@ -2,8 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingVertical="@dimen/activity_padding_vertical"
-    android:paddingHorizontal="@dimen/activity_padding_horizontal"
+
     android:background="@drawable/screen_stroke_background">
 
     <!-- Main layout -->
@@ -13,6 +12,7 @@
         android:orientation="vertical"
 
 
+
         >
 
         <!-- Role section  -->
@@ -20,13 +20,16 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+
+            android:padding="20dp">
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="PLAYER SELECTED ROLES:"
                 android:textSize="@dimen/medium_text"
-                android:textColor="@color/float_text_color"/>
+                android:textColor="@color/float_text_color"
+                android:fontFamily="@font/ocr_a"/>
 
             <ListView
                 android:layout_width="match_parent"
@@ -48,7 +51,9 @@
                 android:layout_height="wrap_content"
                 android:text="LOCATIONS:"
                 android:textSize="@dimen/medium_text"
-                android:textColor="@color/float_text_color"/>
+                android:padding="20dp"
+                android:textColor="@color/float_text_color"
+                android:fontFamily="@font/ocr_a"/>
 
             <ListView
                 android:layout_width="match_parent"
@@ -62,16 +67,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Button
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="55"
-                android:text="Start Timer"
-                android:layout_gravity="center"
-                android:id="@+id/button_timer"
-                android:textSize="@dimen/medium_text"
-                android:background="@drawable/button_3d_background"/>
-
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -82,17 +77,42 @@
                 android:id="@+id/textview_timer"
                 android:textSize="@dimen/medium_text"
                 android:fontFamily="@font/ocr_a"
-                android:textColor="@color/primary_text_color"/>
+                android:textColor="@color/primary_text_color" />
         </LinearLayout>
 
-        <!-- End game button section -->
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="End Game"
-            android:id="@+id/button_end_game"
-            android:textSize="@dimen/medium_text"
-            android:background="@drawable/button_3d_background"/>
+            android:layout_height="119dp"
+            android:layout_marginBottom="13dp"
+            android:background="@color/secondary_bg_color"
+            android:orientation="vertical"
+            android:padding="16dp" >
+
+
+            <Button
+                android:id="@+id/button_timer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="55"
+                android:background="@drawable/button_3d_background"
+                android:text="Start Timer"
+                android:paddingBottom="6dp"
+                android:layout_marginBottom="10dp"
+                android:textColor="@color/secondary_text_color"
+                android:textStyle="bold"
+                />
+            <!-- End game button section -->
+            <Button
+                android:id="@+id/button_end_game"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/button_3d_background"
+                android:textColor="@color/secondary_text_color"
+                android:textStyle="bold"
+                android:text="End Game" />
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Popup Role layout -->
@@ -104,6 +124,8 @@
         android:layout_gravity="center"
         android:padding="10dp"
         android:id="@+id/linearlayout_popup_role"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
         >
 
         <TextView
@@ -113,7 +135,9 @@
             android:text="Player"
             android:id="@+id/textview_popup_player"
             android:textSize="@dimen/medium_text"
-            android:textColor="@color/float_text_color"/>
+            android:textColor="@color/primary_bg_color"
+            android:layout_marginBottom="10dp"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -124,9 +148,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Location:"
+                android:text="LOCATION:"
                 android:textSize="@dimen/medium_text"
-                android:textColor="@color/float_text_color"/>
+                android:textColor="@color/float_text_color"
+                android:fontFamily="@font/ocr_a"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -135,7 +160,8 @@
                 android:text="Location:"
                 android:textSize="@dimen/medium_text"
                 android:paddingStart="10dp"
-                android:textColor="@color/float_text_color"/>
+                android:textColor="@color/primary_bg_color"
+                />
 
         </LinearLayout>
 
@@ -150,9 +176,10 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Role:"
+                android:text="ROLE:"
                 android:textSize="@dimen/medium_text"
-                android:textColor="@color/float_text_color"/>
+                android:textColor="@color/float_text_color"
+                android:fontFamily="@font/ocr_a"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -161,11 +188,9 @@
                 android:id="@+id/textview_popup_role"
                 android:textSize="@dimen/medium_text"
                 android:paddingStart="10dp"
-                android:textColor="@color/float_text_color"/>
+                android:textColor="@color/primary_bg_color"/>
 
         </LinearLayout>
-
-
 
 
         <Button
@@ -175,7 +200,10 @@
             android:layout_gravity="center"
             android:paddingHorizontal="30dp"
             android:text="Close"
-            android:textSize="@dimen/medium_text"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/secondary_text_color"
+            android:textStyle="bold"
             android:background="@drawable/button_3d_background"/>
-    </LinearLayout>
+        </LinearLayout>
+
 </FrameLayout>

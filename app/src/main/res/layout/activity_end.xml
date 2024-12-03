@@ -7,32 +7,32 @@
     android:layout_height="match_parent"
     tools:context=".EndActivity"
     android:orientation="vertical"
-    android:paddingVertical="@dimen/activity_padding_vertical"
-    android:paddingHorizontal="@dimen/activity_padding_horizontal"
     android:background="@drawable/screen_stroke_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingVertical="@dimen/activity_padding_vertical"
+        android:paddingHorizontal="@dimen/activity_padding_horizontal">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location:"
+            android:text="LOCATION:"
             android:textSize="@dimen/medium_text"
             android:textColor="@color/float_text_color"
+            android:fontFamily="@font/ocr_a"
             />
 
         <TextView
+            android:id="@+id/textview_end_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/textview_end_location"
             android:text="Location:"
-            android:textSize="@dimen/medium_text"
-            android:paddingStart="10dp"
-            android:textColor="@color/float_text_color"/>
+            android:textColor="@color/primary_text_color"
+            android:textSize="@dimen/medium_text" />
 
     </LinearLayout>
 
@@ -42,14 +42,17 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Breacher:"
+            android:paddingLeft="24dp"
+            android:text="BREACHER:"
+            android:textColor="@color/float_text_color"
             android:textSize="@dimen/medium_text"
-            android:textColor="@color/float_text_color"/>
+            android:fontFamily="@font/ocr_a"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -57,17 +60,27 @@
             android:text="Location:"
             android:id="@+id/textview_end_breachers"
             android:textSize="@dimen/medium_text"
-            android:paddingStart="10dp"
-            android:textColor="@color/float_text_color"/>
+            android:paddingLeft="25dp"
+            android:textColor="@color/primary_text_color"/>
 
     </LinearLayout>
 
-
-    <Button
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Exit"
-        android:id="@+id/button_end_game"
-        android:textSize="@dimen/medium_text"
-        android:background="@drawable/button_3d_background"/>
+        android:layout_height="119dp"
+        android:layout_marginBottom="13dp"
+        android:background="@color/secondary_bg_color"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/button_end_game"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_3d_background"
+            android:gravity="center"
+            android:text="Exit"
+            android:textColor="@color/secondary_text_color"
+            android:textStyle="bold" />
+    </LinearLayout>
 </LinearLayout>

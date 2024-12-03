@@ -15,85 +15,87 @@
 
         <ImageView
             android:id="@+id/image_placeholder"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="Placeholder Image"
-            android:src="@drawable/placeholder_image"
+            android:layout_width="225dp"
+            android:layout_height="46dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="13dp" />
+            android:layout_marginTop="15dp"
+            android:contentDescription="Breacher Icon"
+            android:src="@drawable/breacher" />
 
         <TextView
             android:id="@+id/title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="BREACH"
-            android:textSize="44sp"
-            android:textStyle="bold"
-            android:fontFamily="@font/ocr_a"
-            android:textColor="@color/primary_text_color"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="8dp" />
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/ocr_a"
+            android:text="BREACH"
+            android:textColor="@color/primary_text_color"
+            android:textSize="44sp"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:id="@+id/players_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="16dp"
+            android:orientation="vertical">
+
             <TextView
                 android:id="@+id/player_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Player 1"
-                android:textColor="@color/primary_text_color"
-                android:fontFamily="@font/ocr_a"/>
+                android:textColor="@color/primary_text_color" />
         </LinearLayout>
 
         <EditText
             android:id="@+id/breacher_count_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Type 1 Here (Breacher count)"
-            android:inputType="number"
             android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_border"
             android:fontFamily="@font/ocr_a"
-            android:textColorHint="@color/primary_text_color"
-            android:textColor="@color/primary_text_color" />
+            android:padding="6dp"
+            android:hint="Type 1 To Initalize Breacher"
+            android:inputType="number"
+            android:textColor="@color/primary_text_color"
+            android:textColorHint="@color/float_text_color" />
 
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ENTER TIME IN MINUTES"
-            android:textAlignment="center"
-            android:fontFamily="@font/ocr_a"
-            android:textColor="@color/primary_text_color"
-            android:textSize="24sp"
-            android:padding="20dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            android:gravity="center" />
+            android:fontFamily="@font/ocr_a"
+            android:gravity="center"
+            android:padding="20dp"
+            android:text="ENTER TIME IN MINUTES"
+            android:textAlignment="center"
+            android:textColor="@color/primary_text_color"
+            android:textSize="24sp" />
 
         <EditText
             android:id="@+id/game_time_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Example:10"
+            android:background="@drawable/edit_text_border"
             android:fontFamily="@font/ocr_a"
-            android:textColorHint="#106b06"
+            android:hint="Example:10"
             android:inputType="number"
             android:padding="6dp"
-            android:background="@drawable/edit_text_border"
-            android:textColor="@color/primary_text_color" />
+            android:textColor="@color/primary_text_color"
+            android:textColorHint="@color/float_text_color" />
 
         <TextView
             android:id="@+id/questions_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="QUESTIONS: 1"
-            android:layout_marginTop="50dp"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
             android:fontFamily="@font/ocr_a"
+            android:text="QUESTIONS: 1"
             android:textColor="@color/primary_text_color"
             android:textSize="24sp" />
 
@@ -102,52 +104,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:max="10"
-            android:progress="1"
-             />
+            android:progress="1" />
     </LinearLayout>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/secondary_bg_color"
-        android:padding="12dp"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="13dp">
+        android:layout_marginBottom="13dp"
+        android:background="@color/secondary_bg_color"
+        android:orientation="vertical"
+        android:padding="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:layout_marginBottom="16dp">
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/button_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Add Player"
-                android:textColor="@color/secondary_text_color"
                 android:background="@drawable/button_3d_background"
-                android:textStyle="bold"
                 android:padding="16dp"
                 android:paddingLeft="50dp"
-                android:paddingRight="8dp" />
+                android:paddingRight="8dp"
+                android:text="Add Player"
+                android:textColor="@color/secondary_text_color"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/button_remove"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Remove Player"
                 android:layout_marginStart="16dp"
                 android:background="@drawable/button_3d_background"
-                android:textColor="@color/secondary_text_color"
-                android:textStyle="bold"
+                android:gravity="center"
                 android:padding="16dp"
                 android:paddingLeft="6dp"
                 android:paddingRight="8dp"
-                android:gravity="center" />
+                android:text="Remove Player"
+                android:textColor="@color/secondary_text_color"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <Button
@@ -155,10 +155,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_3d_background"
+            android:gravity="center"
+            android:padding="16dp"
             android:text="Start Game"
             android:textColor="@color/secondary_text_color"
-            android:textStyle="bold"
-            android:padding="16dp"
-            android:gravity="center" />
+            android:textStyle="bold" />
     </LinearLayout>
 </FrameLayout>
