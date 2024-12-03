@@ -216,7 +216,7 @@ public class OngoingActivity extends AppCompatActivity {
 
                         @Override
                         public void onFinish() {
-
+                            btnEndGame.performClick();
                         }
                     }.start();
                 } else {
