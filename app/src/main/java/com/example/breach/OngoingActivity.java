@@ -142,7 +142,7 @@ public class OngoingActivity extends AppCompatActivity {
         arrPlayerRoles = new String[importedPlayerAmount];
 
         for (int i = 0; i < arrPlayerRoles.length; i++) {
-            arrPlayerRoles[i] = arrLocation.remove(new Random().nextInt(arrLocation.size()));
+            arrPlayerRoles[i] = arrLocation.get(new Random().nextInt(arrLocation.size()));
         }
 
         arrPlayerRoles[breacherIndex] = "Breacher";
