@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.media.MediaPlayer;
 import android.widget.Toast;
 
 
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText breacherCountInput, gameTimeInput;
     private SeekBar questionsSeekBar;
     private TextView questionsLabel;
+    private MediaPlayer mediaPlayer;
     private int playerCount = 1;
     private static final int MAX_PLAYERS = 20;
 
@@ -36,7 +38,12 @@ public class MainActivity extends AppCompatActivity {
         gameTimeInput = findViewById(R.id.game_time_input);
         questionsSeekBar = findViewById(R.id.questions_seekbar);
         questionsLabel = findViewById(R.id.questions_label);
-        
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.breach_menu_theme);
+        mediaPlayer.setLooping(true); // Optional: Loop the music
+        mediaPlayer.start();
+
+
 
 //        TextView locationValue = findViewById(R.id.location_value);
 //        TextView breacherValue = findViewById(R.id.breacher_value);
@@ -101,8 +108,30 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "No players to remove!", Toast.LENGTH_SHORT).show();
         }
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+        }
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 }

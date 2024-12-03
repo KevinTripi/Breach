@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -26,6 +27,7 @@ public class OngoingActivity extends AppCompatActivity {
     private Button btnTimer, btnEndGame, btnEndPopup;
     private TextView txtTimer, txtPopupLocation, txtPopupRole, txtPopupPlayer;
     private ListView listRoles, listLocationsLeft;
+    private MediaPlayer mediaPlayer;
     private LinearLayout llPopup;
     // region String arrays
     private ArrayList<String> arrLocation;
@@ -77,6 +79,10 @@ public class OngoingActivity extends AppCompatActivity {
 
         listRoles = findViewById(R.id.listview_role);
         listLocationsLeft = findViewById(R.id.listview_location_left);
+
+        mediaPlayer = MediaPlayer.create(this, R.raw.breacher_game_music);
+        mediaPlayer.setLooping(true); // Optional: Loop the music
+        mediaPlayer.start();
 
         // Can be either from MainActivity or ResultActivity.
         fromMainIntent = getIntent();
@@ -256,6 +262,31 @@ public class OngoingActivity extends AppCompatActivity {
                 (int) (intMs / 3600000),
                 (int) (intMs % 3600000) / 60000,
                 (int) (intMs % 60000) / 1000);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (mediaPlayer != null) {
+            mediaPlayer.start();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mediaPlayer != null) {
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
     }
 
     // Database stuff
