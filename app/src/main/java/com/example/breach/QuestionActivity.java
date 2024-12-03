@@ -215,6 +215,7 @@ public class QuestionActivity extends AppCompatActivity {
         TextView[] txtOptionPlayers = new TextView[4];
         LinearLayout llOptions = findViewById(R.id.linearlayout_results_options);
 
+
         llQuestions.setVisibility(View.GONE);
         llResults.setVisibility(View.VISIBLE);
 
@@ -238,6 +239,7 @@ public class QuestionActivity extends AppCompatActivity {
                         int ceiling = increment * (i + 1);
 
                         txtOptions[i].setText(String.format("%d - %d:", floor, ceiling));
+                        txtOptions[i].setTextColor(getColor(R.color.primary_text_color));
                         txtOptionPlayers[i].setText("");
 
                         for (int j = 0; j < arrPlayerAnswers.length; j++) {
@@ -248,6 +250,7 @@ public class QuestionActivity extends AppCompatActivity {
                                 txtOptionPlayers[txtOptionPlayers.length - 1].setText(String.format("%s%s: %s\n", txtOptionPlayers[txtOptionPlayers.length - 1].getText(), formatPlayerText(j + 1), arrPlayerAnswers[j]));
                             }
                         }
+                        txtOptionPlayers[i].setTextColor(getColor(R.color.primary_text_color)); // Set text color SeekBar results
                     }
                     break;
 
@@ -257,7 +260,7 @@ public class QuestionActivity extends AppCompatActivity {
                         String optionPlayerText = "";
 
                         txtOptions[i].setText(option);
-
+                        txtOptions[i].setTextColor(getColor(R.color.primary_text_color)); // Set text color for RadioButton options
                         for (int j = 0; j < arrPlayerAnswers.length; j++) {
                             if (arrPlayerAnswers[j].equals(option)) {
                                 optionPlayerText += formatPlayerText(j + 1) + "\n";
@@ -265,12 +268,14 @@ public class QuestionActivity extends AppCompatActivity {
                         }
 
                         txtOptionPlayers[i].setText(optionPlayerText);
+                        txtOptionPlayers[i].setTextColor(getColor(R.color.primary_text_color)); // Set text color for RadioButton results
                     }
                     break;
 
                 default:
                     for (int i = 0; i < arrOptions.length; i++) {
                         txtOptions[i].setText(arrOptions[i]);
+                        txtOptions[i].setTextColor(getColor(R.color.primary_text_color)); // Set text color for CheckBox options
                         txtOptionPlayers[i].setText("");
                     }
 
@@ -281,8 +286,9 @@ public class QuestionActivity extends AppCompatActivity {
                             if (answer.charAt(j) == 'T') {
                                 txtOptionPlayers[j].setText(txtOptionPlayers[j].getText() + formatPlayerText(i + 1) + "\n");
                             }
-
+                            txtOptionPlayers[j].setTextColor(getColor(R.color.primary_text_color)); // Set text color for CheckBox results
                         }
+
                     }
                     break;
             }
