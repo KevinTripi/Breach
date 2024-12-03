@@ -56,6 +56,8 @@ public class OngoingActivity extends AppCompatActivity {
     private long totalGameTime;
     private int pauseGameIndex;
 
+    private boolean fromMainActivity = true;
+
     private DBHelper myDbHelper;
     private SQLiteDatabase db;
 
@@ -256,6 +258,28 @@ public class OngoingActivity extends AppCompatActivity {
                 (int) (intMs / 3600000),
                 (int) (intMs % 3600000) / 60000,
                 (int) (intMs % 60000) / 1000);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (!fromMainActivity) {
+//        Toast.makeText(this, "In Resume!", Toast.LENGTH_SHORT).show();
+            // Starts the timer after 1.5 seconds after coming back from QuestionActivity
+            new CountDownTimer(1500, 1500) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+
+                }
+
+                @Override
+                public void onFinish() {
+                    btnTimer.performClick();
+                }
+            }.start();
+        } else {
+            fromMainActivity = false;
+        }
     }
 
     // Database stuff
